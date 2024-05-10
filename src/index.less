@@ -1,0 +1,46 @@
+@import "theme";
+
+html, body {
+  padding: 0;
+  margin: 0;
+  background: @colorBg;
+}
+
+#root {
+  padding: 24px;
+}
+
+// 侧边栏
+.ant-layout-sider-children {
+  background-image: url("./assets/aside.png");
+
+  // Logo
+  #logo {
+    a > h1 {
+      color: @colorFont;
+    }
+  }
+
+  // 菜单字体
+  .ant-pro-base-menu-inline-item-text {
+    color: @colorFont;
+  }
+}
+
+// 页面
+
+//页头
+.ant-page-header {
+  border: solid 1px @colorBorder;
+  border-radius: 6px;
+}
+
+//内容
+.ant-pro-page-container-children-container {
+  padding: 0;
+}
+
+.anticon {
+  color: @colorFont;
+}
+
