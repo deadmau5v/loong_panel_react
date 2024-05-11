@@ -7,19 +7,20 @@ import "./terminal.less"
 
 export default function Page() {
     const config = useContext(ConfigContext);
-
+    console.log("初始化Page Terminal")
     const [screen, setScreen] = useState([])
-    const [term,] = useState(new Terminal());
+    const [term,] = useState(() => new Terminal());
     term.resize(140, 45);
 
     useEffect(() => {
+        console.log("初始化终端")
         // 设置终端行数
         const terminalDiv = document.getElementById('terminal');
         if (terminalDiv) {
             term.open(terminalDiv);
             term.clear();
         }
-    }, [term])
+    }, [])
 
     const API_get_screens = config?.API_URL + "/api/v1/screen/get_screens"
     const API_create_screens = config?.API_URL + "/api/v1/screen/create"

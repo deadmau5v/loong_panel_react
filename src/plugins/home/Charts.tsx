@@ -3,35 +3,75 @@ import Chart from "./Chart"
 import {useContext, useEffect, useState} from "react";
 import {ConfigContext} from "../../config.tsx";
 
+export type SystemStatus = {
+    disk_usage: number,
+    average_load: number,
+    memory_usage: number,
+    cpu_usage: number,
+
+    load1m: number,
+    load5m: number,
+    load15m: number,
+
+    cpu_number: number,
+    cpu_cores: number,
+    cpu_mhz: number,
+    cpu_arch: number,
+
+    ram_total: number,
+    ram_used_free: number[],
+    ram_mhz: number,
+    ram_swap: number,
+
+    disk_total: number,
+    disks: Disk[],
+}
+
+export type Disk = {
+    FileSystem: number,
+    MaxMemory: number,
+    UsedMemory: number,
+    MountedPath: number,
+}
 
 // Plugin 表单插件 显示系统状态
 export default function Plugin() {
     const config = useContext(ConfigContext);
     const API = config?.API_URL + "/api/v1/status/system_status"
-    const [average_load, average_load_setter] = useState(0)
-    const [cpu_usage, cpu_usage_setter] = useState(0)
-    const [disk_usage, disk_usage_setter] = useState(0)
-    const [memory_usage, memory_usage_setter] = useState(0)
+    const [systemStatus, setSystemStatus] = useState<SystemStatus>({
+        disk_usage: 0,
+        average_load: 0,
+        memory_usage: 0,
+        cpu_usage: 0,
+
+        load1m: 0,
+        load5m: 0,
+        load15m: 0,
+
+        cpu_number: 0,
+        cpu_cores: 0,
+        cpu_mhz: 0,
+        cpu_arch: 0,
+
+        ram_total: 0,
+        ram_used_free: [0, 0],
+        ram_mhz: 0,
+        ram_swap: 0,
+
+        disk_total: 0,
+        disks: [],
+    })
+
+    function update() {
+        fetch(API)
+            .then(res => res.json())
+            .then(data => {
+                console.log(data)
+                setSystemStatus(data)
+            })
+    }
 
     useEffect(() => {
-        function update() {
-            fetch(API)
-                .then(res => res.json())
-                .then(data => {
-                    console.log(data)
-                    const average_load = Math.floor(data.average_load)
-                    const cpu_usage = Math.floor(data.cpu_usage * 100) / 100
-                    const disk_usage = Math.floor(data.disk_usage * 100) / 100
-                    const memory_usage = Math.floor(data.memory_usage * 100) / 100
-
-                    average_load_setter(average_load)
-                    cpu_usage_setter(cpu_usage)
-                    disk_usage_setter(disk_usage)
-                    memory_usage_setter(memory_usage)
-                })
-        }
-
-        update();
         const timer = setInterval(update, 2000);
 
         // 清理函数
@@ -40,15 +80,19 @@ export default function Plugin() {
         };
     }, [API]);
 
+    useEffect(() => {
+        update()
+    }, [])
+
     return (
         <>
             {/* 四个仪表盘 */}
             <Card id="Charts" className="card" title="性能监控">
                 <Flex justify="space-evenly" align="center">
-                    <Chart title="Load" percent={average_load}/>
-                    <Chart title="CPU" percent={cpu_usage}/>
-                    <Chart title="RAM" percent={memory_usage}/>
-                    <Chart title="Disk" percent={disk_usage}/>
+                    <Chart title="Load" status={systemStatus}/>
+                    <Chart title="CPU" status={systemStatus}/>
+                    <Chart title="RAM" status={systemStatus}/>
+                    <Chart title="Disk" status={systemStatus}/>
                 </Flex>
             </Card>
         </>
