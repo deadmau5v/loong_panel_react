@@ -2,7 +2,6 @@ import {ProTable,} from "@ant-design/pro-components";
 import React, {useContext, useEffect, useState} from "react";
 import {ConfigContext} from "../config.tsx";
 import {FolderOutlined, FileOutlined} from '@ant-design/icons';
-import "./files.less"
 
 // 文件类型
 export type File = {

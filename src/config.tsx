@@ -7,5 +7,5 @@ interface ConfigType {
 export const ConfigContext = React.createContext<ConfigType | null>(null);
 
 export const config: ConfigType = {
-    API_URL: 'http://localhost:8080'
+    API_URL: ''
 };
