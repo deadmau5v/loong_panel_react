@@ -36,7 +36,7 @@ export default function Page() {
 
     const API_get_screens = config?.API_URL + "/api/v1/screen/get_screens"
     const API_create_screens = config?.API_URL + "/api/v1/screen/create"
-    const API_screen_ws = "ws://127.0.0.1:8080/api/ws/screen"
+    const API_screen_ws = config?.WS_URL + "/api/ws/screen?id="
     const getScreen = function getScreen() {
         fetch(API_get_screens, {
             method: "GET",
@@ -77,7 +77,7 @@ export default function Page() {
     function ChangeScreen(id: number) {
         term.clear()
         webSocket?.close()
-        const ws = new WebSocket(API_screen_ws + "/?id=" + id)
+        const ws = new WebSocket(API_screen_ws + id)
         ws.onmessage = function (event) {
             term.write(event.data)
         }
