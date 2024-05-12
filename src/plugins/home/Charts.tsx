@@ -37,7 +37,8 @@ export type Disk = {
 // Plugin 表单插件 显示系统状态
 export default function Plugin() {
     const config = useContext(ConfigContext);
-    const API = config?.API_URL + "/api/v1/status/system_status"
+    const API = `${config?.API_URL}/api/v1/status/system_status`;
+    const UPDATE_INTERVAL = 2000;
     const [systemStatus, setSystemStatus] = useState<SystemStatus>({
         disk_usage: 0,
         average_load: 0,
@@ -62,17 +63,17 @@ export default function Plugin() {
         disks: [],
     })
 
-    function update() {
-        fetch(API)
-            .then(res => res.json())
-            .then(data => {
-                console.log(data)
-                setSystemStatus(data)
-            })
+    const update = async () => {
+        const response = await fetch(API);
+        if (response.ok) {
+            const data = await response.json();
+            console.log(data);
+            setSystemStatus(data);
+        }
     }
 
     useEffect(() => {
-        const timer = setInterval(update, 2000);
+        const timer = setInterval(update, UPDATE_INTERVAL);
 
         // 清理函数
         return () => {

@@ -1,11 +1,12 @@
 import {PageContainer, ProLayout} from '@ant-design/pro-components'
-import {ReactElement, useState} from 'react'
+import {ReactElement, useState, Suspense, lazy} from 'react'
 import defaultProps from "./aside/AsideProps.tsx"
 import logo from "./assets/logo.png"
-import HomePage from "./pages/HomePage.tsx"
-import TerminalPage from "./pages/TerminalPage.tsx"
-import FilesPage from "./pages/FilesPage.tsx"
-import Error404Page from "./pages/Error404Page.tsx"
+
+const HomePage = lazy(() => import('./pages/HomePage.tsx'));
+const TerminalPage = lazy(() => import('./pages/TerminalPage.tsx'));
+const FilesPage = lazy(() => import('./pages/FilesPage.tsx'));
+const Error404Page = lazy(() => import('./pages/Error404Page.tsx'));
 
 function App() {
     const [pathname, setPathname] = useState('/');
@@ -25,7 +26,6 @@ function App() {
     }
 
     return (
-
         <div
             id="test-pro-layout"
             style={{
@@ -52,7 +52,9 @@ function App() {
                 )}
             >
                 <PageContainer>
-                    {page}
+                    <Suspense fallback={<div>Loading...</div>}>
+                        {page}
+                    </Suspense>
                 </PageContainer>
             </ProLayout>
         </div>
@@ -60,4 +62,3 @@ function App() {
 }
 
 export default App
-// 入口

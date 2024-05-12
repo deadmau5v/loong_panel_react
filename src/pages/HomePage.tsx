@@ -1,19 +1,21 @@
-import Charts from "../plugins/home/Charts.tsx"
-import SystemInfo from "../plugins/home/SystemInfo.tsx"
-import Power from "../plugins/home/Power.tsx"
 import {ProCard} from "@ant-design/pro-components";
-import {ReactElement} from "react";
+import {lazy, Suspense} from 'react';
+
+const Charts = lazy(() => import('../plugins/home/Charts.tsx'));
+const SystemInfo = lazy(() => import('../plugins/home/SystemInfo.tsx'));
+const Power = lazy(() => import('../plugins/home/Power.tsx'));
 
 export default function Page() {
     const pageName = "home"
-    let content: ReactElement
 
-    content = <>
+    const content = <>
         {/* 左右 布局 */}
         <ProCard id="main" bordered gutter={16}>
             {/* 左边 60% */}
             <ProCard direction="column" id="main-l">
-                <Charts/>
+                <Suspense fallback={<div>Loading...</div>}>
+                    <Charts/>
+                </Suspense>
             </ProCard>
             {/*  右边 40% */}
             <ProCard direction="column" id="main-r" colSpan={{
@@ -23,8 +25,10 @@ export default function Page() {
                 lg: '30%',
                 xl: '30%',
             }}>
-                <SystemInfo/>
-                <Power/>
+                <Suspense fallback={<div>Loading...</div>}>
+                    <SystemInfo/>
+                    <Power/>
+                </Suspense>
             </ProCard>
         </ProCard>
     </>

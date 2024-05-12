@@ -1,7 +1,8 @@
-import {ProTable,} from "@ant-design/pro-components";
-import React, {useContext, useEffect, useState} from "react";
+import React, {useContext, useEffect, useState, lazy, Suspense} from "react";
 import {ConfigContext} from "../config.tsx";
 import {FolderOutlined, FileOutlined} from '@ant-design/icons';
+
+const FileComponent = lazy(() => import('../plugins/file/File.tsx'));
 
 // 文件类型
 export type File = {
@@ -41,7 +42,7 @@ export default function Page() {
             dataIndex: 'icon',
             key: 'icon',
             render: (_dom: React.ReactNode, record: File) => (
-                record.isDir ? <FolderOutlined /> : <FileOutlined />
+                record.isDir ? <FolderOutlined/> : <FileOutlined/>
             ),
         },
         {
@@ -86,41 +87,11 @@ export default function Page() {
         setDirFiles("/", setDataSource, API)
     }, [])
 
-
-    return (
+   return (
         <>
-            <ProTable<File>
-                // 表头
-                columns={columns}
-                // 数据源
-                dataSource={dataSource}
-                // 主键
-                rowKey="name"
-                // 搜索配置
-                search={{
-                    labelWidth: 'auto',
-                }}
-                // 分页配置
-                pagination={{
-                    pageSize: 12,
-                }}
-                // 表格标题
-                dateFormatter="string"
-                headerTitle="文件列表"
-                // 工具栏
-                toolBarRender={() => [
-                    // <Button key="button" type="primary">
-                    //     新建
-                    // </Button>,
-                ]}
-                // 行选择
-                rowSelection={{
-                    onChange: (selectedRowKeys, selectedRows) => {
-                        console.log(`Selected row keys: ${selectedRowKeys}`);
-                        console.log('Selected rows: ', selectedRows);
-                    },
-                }}
-            />
+            <Suspense fallback={<div>Loading...</div>}>
+                <FileComponent columns={columns} dataSource={dataSource} />
+            </Suspense>
         </>
     )
 }

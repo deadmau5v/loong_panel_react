@@ -4,52 +4,44 @@ import {ConfigContext} from "../../config.tsx";
 import {LoadingOutlined, PoweroffOutlined, RedoOutlined} from '@ant-design/icons';
 
 // Plugin 电源插件 开机关机
-export default function Plugin() {
+export default function PowerControl() {
     const config = useContext(ConfigContext);
-    const RebootAPI = config?.API_URL + "/api/v1/power/reboot"
-    const ShutdownAPI = config?.API_URL + "/api/v1/power/shutdown"
+    const getApiUrl = (endpoint: string) => `${config?.API_URL}/api/v1/${endpoint}`;
 
-    const [status, setStatus] = useState(true)
+    const [isPowerOn, setPowerStatus] = useState(true)
 
-    function Shutdown() {
-        if (status) {
-            fetch(ShutdownAPI).then(() => {
-                setStatus(false)
-            })
+    const shutdown = async () => {
+        if (isPowerOn) {
+            const response = await fetch(getApiUrl("power/shutdown"));
+            if (response.ok) {
+                setPowerStatus(false);
+            }
         }
     }
 
-    function Reboot() {
-        if (status) {
-            fetch(RebootAPI).then(() => {
-                setStatus(false)
-            })
+    const reboot = async () => {
+        if (isPowerOn) {
+            const response = await fetch(getApiUrl("power/reboot"));
+            if (response.ok) {
+                setPowerStatus(false);
+            }
         }
     }
 
-    const powerOn = (
+    const powerOnButtons = (
         <>
-            <Button type="primary" onClick={Shutdown} icon={
-                <PoweroffOutlined/>
-
-            }>{"关机"}</Button>
-            <Button type="primary" onClick={Reboot} icon={
-                <RedoOutlined/>
-            }>{"重启"}</Button>
+            <Button type="primary" onClick={shutdown} icon={<PoweroffOutlined/>}>{"关机"}</Button>
+            <Button type="primary" onClick={reboot} icon={<RedoOutlined/>}>{"重启"}</Button>
         </>
     )
 
-    const powerOff = <span>
-        <LoadingOutlined id="loadingicon"/> {"关机中..."}
-    </span>
+    const powerOffStatus = <span><LoadingOutlined id="loadingicon"/> {"关机中..."}</span>
 
     return (
         <>
             {/* 电源操作 */}
             <Card id="Power" className="card" title="电源操作">
-                {
-                    status ? powerOn : powerOff
-                }
+                {isPowerOn ? powerOnButtons : powerOffStatus}
             </Card>
         </>
     )

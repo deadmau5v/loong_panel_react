@@ -2,25 +2,36 @@ import {Card, Descriptions} from "antd";
 import {ConfigContext} from "../../config.tsx";
 import {useContext, useEffect, useState} from "react";
 
+type SystemInfo = {
+    system_arch: string,
+    system_public_ip: string,
+    system_cpu_name: string,
+    system_linux_version: string,
+    system_run_time: string
+}
+
 export default function Plugin() {
     const config = useContext(ConfigContext);
-    const API = config?.API_URL + "/api/v1/status/system_info"
-    const [system_arch, system_arch_setter] = useState("")
-    const [system_public_ip, system_public_ip_setter] = useState("")
-    const [system_cpu_name, system_cpu_name_setter] = useState("")
-    const [system_linux_version, system_linux_version_setter] = useState("")
-    const [system_run_time, system_run_time_setter] = useState("")
+    const API = `${config?.API_URL}/api/v1/status/system_info`;
+    const [systemInfo, setSystemInfo] = useState<SystemInfo>({
+        system_arch: "",
+        system_public_ip: "",
+        system_cpu_name: "",
+        system_linux_version: "",
+        system_run_time: ""
+    });
+
+    const fetchSystemInfo = async () => {
+        const response = await fetch(API);
+        if (response.ok) {
+            const data = await response.json();
+            setSystemInfo(data);
+        }
+    }
+
     useEffect(() => {
-        fetch(API)
-            .then(res => res.json())
-            .then(data => {
-                system_arch_setter(data.system_arch)
-                system_public_ip_setter(data.system_public_ip)
-                system_cpu_name_setter(data.system_cpu_name)
-                system_linux_version_setter(data.system_linux_version)
-                system_run_time_setter(data.system_run_time)
-            })
-    })
+        fetchSystemInfo();
+    }, [])
 
     return (
         <>
@@ -31,11 +42,11 @@ export default function Plugin() {
                             size="small"
                             column={1}
                         >
-                            <Descriptions.Item label="公网 IP">{system_public_ip}</Descriptions.Item>
-                            <Descriptions.Item label="系统架构">{system_arch}</Descriptions.Item>
-                            <Descriptions.Item label="处理器名">{system_cpu_name}</Descriptions.Item>
-                            <Descriptions.Item label="内核版本">{system_linux_version}</Descriptions.Item>
-                            <Descriptions.Item label="运行时间">{system_run_time}</Descriptions.Item>
+                            <Descriptions.Item label="公网 IP">{systemInfo.system_public_ip}</Descriptions.Item>
+                            <Descriptions.Item label="系统架构">{systemInfo.system_arch}</Descriptions.Item>
+                            <Descriptions.Item label="处理器名">{systemInfo.system_cpu_name}</Descriptions.Item>
+                            <Descriptions.Item label="内核版本">{systemInfo.system_linux_version}</Descriptions.Item>
+                            <Descriptions.Item label="运行时间">{systemInfo.system_run_time}</Descriptions.Item>
                         </Descriptions>
                     }
                 />

@@ -1,19 +1,24 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-
-// https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react(), ],
+  plugins: [react()],
   css: {
     preprocessorOptions: {
       less: {
         javascriptEnabled: true,
-        modifyVars: {
-          
+        modifyVars: {},
+      },
+    },
+  },
+  build: {
+    chunkSizeWarningLimit: 600,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'react-dom': ['react', 'react-dom', 'lodash'], // 将'react-dom'单独打包成一个代码块
         },
-      }
-    }
-  }
-
+      },
+    },
+  },
 })

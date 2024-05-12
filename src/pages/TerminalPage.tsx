@@ -1,9 +1,8 @@
 import {Terminal} from "@xterm/xterm"
-import {Dispatch, SetStateAction, useContext, useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import {ConfigContext} from "../config.tsx";
 import {ProCard} from "@ant-design/pro-components";
 import {Button, Divider} from "antd";
-
 
 type screen = {
     name: string,
@@ -11,22 +10,17 @@ type screen = {
 }
 
 export default function Page() {
-    console.log("初始化Page Terminal")
     const config = useContext(ConfigContext);
     const [screen, setScreen] = useState([])
     const [term,] = useState(() => new Terminal());
-    const [webSocket, setWebSocket]
-        : [WebSocket | undefined, Dispatch<SetStateAction<WebSocket | undefined>>]
-        = useState();
+    const [webSocket, setWebSocket] = useState<WebSocket | undefined>();
 
     term.resize(140, 45);
 
     useEffect(() => {
-        // 设置终端行数
         const terminalDiv = document.getElementById('terminal');
 
         if (terminalDiv) {
-            console.log("初始化终端")
             term.open(terminalDiv);
             term.clear();
             term.writeln("欢迎使用 LoongPanel 终端")
@@ -34,61 +28,40 @@ export default function Page() {
         getScreen()
     }, [])
 
-    const API_get_screens = config?.API_URL + "/api/v1/screen/get_screens"
-    const API_create_screens = config?.API_URL + "/api/v1/screen/create"
-    const API_screen_ws = config?.WS_URL + "/api/ws/screen?id="
-    const getScreen = function getScreen() {
-        fetch(API_get_screens, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-            }
-        }).then(response => {
-            if (response.ok) {
-                return response.json();
-            }
-        }).then(data => {
-                if (data) {
-                    setScreen(data);
-                }
-            }
-        );
+    const getApiUrl = (endpoint: string) => `${config?.API_URL}/api/v1/${endpoint}`;
+    const getWsUrl = (id: number) => `${config?.WS_URL}/api/ws/screen?id=${id}`;
+
+    const getScreen = async () => {
+        const response = await fetch(getApiUrl("screen/get_screens"));
+        if (response.ok) {
+            const data = await response.json();
+            setScreen(data);
+        }
     };
 
-    function createScreen() {
-        fetch(API_create_screens, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-            }
-        }).then(response => {
-            if (response.ok) {
-                return response.json();
-            }
-        }).then(data => {
-                if (data) {
-                    console.log(data)
-                    getScreen();
-                }
-            }
-        );
+    const createScreen = async () => {
+        const response = await fetch(getApiUrl("screen/create"));
+        if (response.ok) {
+            const data = await response.json();
+            console.log(data);
+            getScreen();
+        }
     }
 
-    function ChangeScreen(id: number) {
-        webSocket?.close()
-        term.clear()
+    const initializeWebSocket = (id: number) => {
+        const ws = new WebSocket(getWsUrl(id));
+        ws.onmessage = event => term.write(event.data);
+        term.onData(data => ws.send(data));
+        setWebSocket(ws);
+    }
 
-        term.writeln("\n🔄   正在连接到窗口 [" + id + "] ...")
-        const ws = new WebSocket(API_screen_ws + id)
-        term.writeln("✅   链接成功.")
-        term.clear()
-        ws.onmessage = function (event) {
-            term.write(event.data)
-        }
-        term.onData(data => {
-            ws.send(data)
-        })
-        setWebSocket(ws)
+    const changeScreen = (id: number) => {
+        webSocket?.close();
+        term.clear();
+        term.writeln(`\n🔄   正在连接到窗口 [${id}] ...`);
+        initializeWebSocket(id);
+        term.writeln("✅   链接成功.");
+        term.clear();
     }
 
     return (
@@ -102,14 +75,9 @@ export default function Page() {
                     <Button type={"primary"} onClick={createScreen} id={"createScreen"}>创建窗口</Button>
                     <Divider/>
                     {
-                        screen.map((item: screen) => {
-                                return (
-                                    <Button key={item.id} onClick={() => {
-                                        ChangeScreen(item.id)
-                                    }}>{item.name}</Button>
-                                )
-                            }
-                        )
+                        screen.map((item: screen) => (
+                            <Button key={item.id} onClick={() => changeScreen(item.id)}>{item.name}</Button>
+                        ))
                     }
                 </ProCard>
             </ProCard>
