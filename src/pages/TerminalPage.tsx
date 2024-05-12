@@ -75,9 +75,13 @@ export default function Page() {
     }
 
     function ChangeScreen(id: number) {
-        term.clear()
         webSocket?.close()
+        term.clear()
+
+        term.writeln("\n🔄   正在连接到窗口 [" + id + "] ...")
         const ws = new WebSocket(API_screen_ws + id)
+        term.writeln("✅   链接成功.")
+        term.clear()
         ws.onmessage = function (event) {
             term.write(event.data)
         }
