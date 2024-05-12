@@ -6,11 +6,8 @@ import HomePage from "./pages/HomePage.tsx"
 import TerminalPage from "./pages/TerminalPage.tsx"
 import FilesPage from "./pages/FilesPage.tsx"
 import Error404Page from "./pages/Error404Page.tsx"
-import Test from "./pages/Test.tsx"
 
 function App() {
-
-
     const [pathname, setPathname] = useState('/');
     let page: ReactElement
     switch (pathname) {
@@ -22,9 +19,6 @@ function App() {
             break
         case "/terminal":
             page = <TerminalPage/>
-            break
-        case "/test":
-            page = <Test />
             break
         default:
             page = <Error404Page/>

@@ -2,7 +2,6 @@ import {
     HomeFilled,
     FolderOpenFilled,
     MergeFilled,
-    CrownFilled,
 } from '@ant-design/icons';
 
 export default {
@@ -25,11 +24,6 @@ export default {
                 path: '/files',
                 name: '文件',
                 icon: <FolderOpenFilled />,
-                component: '',
-            },            {
-                path: '/test',
-                name: '测试',
-                icon: <CrownFilled />,
                 component: '',
             },
             // { 二级标题

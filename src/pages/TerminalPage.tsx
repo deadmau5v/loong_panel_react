@@ -6,19 +6,21 @@ import {Button, Divider} from "antd";
 import "./terminal.less"
 
 export default function Page() {
-    const config = useContext(ConfigContext);
     console.log("初始化Page Terminal")
+    const config = useContext(ConfigContext);
     const [screen, setScreen] = useState([])
     const [term,] = useState(() => new Terminal());
     term.resize(140, 45);
 
     useEffect(() => {
-        console.log("初始化终端")
         // 设置终端行数
         const terminalDiv = document.getElementById('terminal');
-        if (terminalDiv) {
-            term.open(terminalDiv);
-            term.clear();
+
+            if (terminalDiv) {
+                console.log("初始化终端")
+                term.open(terminalDiv);
+                term.clear();
+                term.writeln("欢迎使用 LoongPanel 终端");
         }
     }, [])
 
