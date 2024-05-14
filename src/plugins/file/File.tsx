@@ -1,5 +1,6 @@
-import {ProTable} from "@ant-design/pro-components";
+import {ProTable, ProColumns} from "@ant-design/pro-components";
 import React from "react";
+import {SortOrder} from "antd/es/table/interface";
 
 // 文件类型
 type File = {
@@ -19,25 +20,39 @@ type File = {
     showSize: boolean;// 是否显示大小
 }
 
-export type column = {
-    title: string,
-    dataIndex: string,
-    key: string,
-}
-
 type FileComponentProps = {
-    columns: column[];
+    columns: ProColumns<File>[];
     dataSource: File[];
 }
 
 const FileComponent: React.FC<FileComponentProps> = ({columns, dataSource}) => {
+    const modifiedColumns = columns.map(column => {
+        if (column.dataIndex === 'name') {
+            return {
+                ...column,
+                defaultSortOrder: 'ascend' as SortOrder, // 默认升序排序
+                sorter: (a: File, b: File) => {
+                    // 先按照isDir排序 如果isDir相同 再按照name排序
+                    if (a.isDir === b.isDir) {
+                        return a.name.localeCompare(b.name);
+                    }
+                    return a.isDir ? -1 : 1;
+                },
+            };
+        }
+        return column;
+    });
+
     return (
         <ProTable<File>
-            columns={columns}
+            columns={modifiedColumns}
             dataSource={dataSource}
             rowKey="path"
             search={false}
             options={false}
+            rowSelection={{
+
+            }}
             pagination={false}
             dateFormatter="string"
         />

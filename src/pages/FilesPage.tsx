@@ -4,6 +4,18 @@ import {FolderOutlined, FileOutlined} from '@ant-design/icons';
 
 const FileComponent = lazy(() => import('../plugins/file/File.tsx'));
 
+
+// 转换内存单位
+function ChangeMemory(n: number, showUnit: boolean = true) {
+    const memoryUnits = ["B", "KB", "MB", "GB"];
+    let unitIndex = 0;
+    while (n >= 1024 && unitIndex < memoryUnits.length - 1) {
+        n /= 1024;
+        unitIndex++;
+    }
+    return n.toFixed(2) + (showUnit ? memoryUnits[unitIndex] : "");
+}
+
 // 文件类型
 export type File = {
     name: string;// 文件名
@@ -32,6 +44,27 @@ function setDirFiles(path: string, setter: React.Dispatch<React.SetStateAction<F
         })
 }
 
+
+// 所有者
+function caseUser(user: number) {
+    switch (user) {
+        case 0:
+            return "root"
+        default:
+            return user
+    }
+}
+
+// 所属组
+function caseGroup(group: number) {
+    switch (group) {
+        case 0:
+            return "root"
+        default:
+            return group
+    }
+}
+
 export default function Page() {
     const config = useContext(ConfigContext);
     const API = config?.API_URL + "/api/v1/files/dir"
@@ -49,26 +82,41 @@ export default function Page() {
             title: '文件名',
             dataIndex: 'name',
             key: 'name',
+            render: (_dom: React.ReactNode, record: File) => (
+                record.isDir ? <a onClick={() => setDirFiles(record.path, setDataSource, API)}>{record.name}</a> : record.name
+            ),
+            sorter: (a: File, b: File) => a.name.localeCompare(b.name),
         },
         {
             title: '大小',
             dataIndex: 'size',
             key: 'size',
+            render: (_dom: React.ReactNode, record: File) => (
+                record.isDir ? "" : ChangeMemory(record.size)
+            ),
+            sorter: (a: File, b: File) => a.isDir ? 1 : a.size - b.size,
         },
         {
             title: '路径',
             dataIndex: 'path',
             key: 'path',
+            sorter: (a: File, b: File) => a.path.localeCompare(b.path),
         },
         {
             title: '所有者',
             dataIndex: 'user',
             key: 'user',
+            render: (_dom: React.ReactNode, record: File) => (
+                caseUser(record.user)
+            ),
         },
         {
             title: '所属组',
             dataIndex: 'group',
             key: 'group',
+            render: (_dom: React.ReactNode, record: File) => (
+                caseGroup(record.group)
+            ),
         },
         {
             title: '权限',
@@ -87,11 +135,12 @@ export default function Page() {
         setDirFiles("/", setDataSource, API)
     }, [])
 
-   return (
+    return (
         <>
             <Suspense fallback={<div>Loading...</div>}>
-                <FileComponent columns={columns} dataSource={dataSource} />
+                <FileComponent columns={columns} dataSource={dataSource}/>
             </Suspense>
         </>
     )
 }
+
