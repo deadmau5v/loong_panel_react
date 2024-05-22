@@ -36,7 +36,16 @@ export type File = {
 
 // 获取目录下的文件
 function setDirFiles(path: string, setter: React.Dispatch<React.SetStateAction<File[]>>, API: string) {
-    fetch(API + "?path=" + encodeURIComponent(path))
+    fetch(API + "?path=" + encodeURIComponent(path), {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Cookie': document.cookie,
+            'Authorization': 'Bearer ' + document.cookie ? document.cookie.split("=")[1] : ''
+
+        }
+
+    })
         .then(res => res.json())
         .then(data => {
             console.log(data)
@@ -83,7 +92,8 @@ export default function Page() {
             dataIndex: 'name',
             key: 'name',
             render: (_dom: React.ReactNode, record: File) => (
-                record.isDir ? <a onClick={() => setDirFiles(record.path, setDataSource, API)}>{record.name}</a> : record.name
+                record.isDir ?
+                    <a onClick={() => setDirFiles(record.path, setDataSource, API)}>{record.name}</a> : record.name
             ),
             sorter: (a: File, b: File) => a.name.localeCompare(b.name),
         },

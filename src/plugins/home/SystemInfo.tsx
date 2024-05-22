@@ -22,7 +22,14 @@ export default function Plugin() {
     });
 
     const fetchSystemInfo = async () => {
-        const response = await fetch(API);
+        const response = await fetch(API, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Cookie': document.cookie,
+                'Authorization': 'Bearer ' + document.cookie ? document.cookie.split("=")[1] : ''
+            }
+        });
         if (response.ok) {
             const data = await response.json();
             setSystemInfo(data);

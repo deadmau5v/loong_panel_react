@@ -32,7 +32,14 @@ export default function Page() {
     const getWsUrl = (id: number) => `${config?.WS_URL}/api/ws/screen?id=${id}`;
 
     const getScreen = async () => {
-        const response = await fetch(getApiUrl("screen/get_screens"));
+        const response = await fetch(getApiUrl("screen/get_screens"), {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Cookie': document.cookie,
+                'Authorization': 'Bearer ' + document.cookie ? document.cookie.split("=")[1] : ''
+            }
+        });
         if (response.ok) {
             const data = await response.json();
             setScreen(data);
@@ -40,7 +47,14 @@ export default function Page() {
     };
 
     const createScreen = async () => {
-        const response = await fetch(getApiUrl("screen/create"));
+        const response = await fetch(getApiUrl("screen/create"), {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Cookie': document.cookie,
+                'Authorization': 'Bearer ' + document.cookie ? document.cookie.split("=")[1] : ''
+            }
+        });
         if (response.ok) {
             const data = await response.json();
             console.log(data);
