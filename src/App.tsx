@@ -3,6 +3,7 @@ import {ReactElement, useState, Suspense, lazy, useEffect} from 'react'
 import defaultProps from "./aside/AsideProps.tsx"
 import logo from "./assets/logo.png"
 
+const UserPage = lazy(() => import('./pages/UserPage.tsx'));
 const HomePage = lazy(() => import('./pages/HomePage.tsx'));
 const TerminalPage = lazy(() => import('./pages/TerminalPage.tsx'));
 const FilesPage = lazy(() => import('./pages/FilesPage.tsx'));
@@ -11,6 +12,7 @@ const LoginPage = lazy(() => import('./pages/LoginPage.tsx'));
 
 function App() {
     const [pathname, setPathname] = useState(window.location.pathname);
+    const [logined, setLogined] = useState(false);
 
     // 验证Cookie
     useEffect(() => {
@@ -24,6 +26,8 @@ function App() {
         }).then(res => {
             if (res.status === 401) {
                 setPathname("/login")
+            } else {
+                setLogined(true)
             }
         })
     }, [])
@@ -40,10 +44,17 @@ function App() {
             page = <TerminalPage/>
             break
         case "/login":
-            page = <LoginPage/>
+            page = <LoginPage setlogined={setLogined}/>
+            break
+        case "/user":
+            page = <UserPage setLogined={setLogined}/>
             break
         default:
             page = <Error404Page/>
+    }
+
+    if (!logined) {
+        page = <LoginPage setlogined={setLogined}/>
     }
 
     return (

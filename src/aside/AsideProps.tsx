@@ -2,6 +2,7 @@ import {
     HomeFilled,
     FolderOpenFilled,
     MergeFilled,
+    UserOutlined,
 } from '@ant-design/icons';
 
 export default {
@@ -26,6 +27,12 @@ export default {
                 icon: <FolderOpenFilled />,
                 component: '',
             },
+            {
+                path: "/user",
+                name: "用户",
+                icon: <UserOutlined/>,
+                component: "",
+            }
             // { 二级标题
             //   path: '/admin',
             //   name: '管理页',
