@@ -1,8 +1,7 @@
 import LogoutCard from "../plugins/login/LogoutCard.tsx"
-import React from "react";
 
-export default function UserPage({setLogined}: { setLogined: React.Dispatch<React.SetStateAction<boolean>> }) {
+export default function UserPage() {
     return (
-        <LogoutCard setLogined={setLogined}/>
+        <LogoutCard/>
     );
 }

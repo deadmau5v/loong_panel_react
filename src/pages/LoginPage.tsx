@@ -1,8 +1,7 @@
 import LoginCard from '../plugins/login/LoginCard.tsx';
 import {ProCard} from "@ant-design/pro-components";
-import React from "react";
 
-const LoginForm = ({ setlogined } : {setlogined :  React.Dispatch<React.SetStateAction<boolean>>}) => {
+const LoginForm = () => {
 
     return (
         <>
@@ -16,7 +15,7 @@ const LoginForm = ({ setlogined } : {setlogined :  React.Dispatch<React.SetState
                 padding: 30
             }}
             >
-                <LoginCard setlogined={setlogined}/>
+                <LoginCard />
             </ProCard>
         </>
     );

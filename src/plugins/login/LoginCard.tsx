@@ -1,8 +1,9 @@
 import {ProForm, ProFormRadio, ProFormText} from '@ant-design/pro-components';
 import {UserOutlined, LockOutlined} from '@ant-design/icons';
-import React, {useContext} from "react";
+import {useContext} from "react";
 import {ConfigContext} from "../../config.tsx";
 import {NotificationArgsProps, notification} from 'antd';
+import {useAuth} from "../AuthContext.tsx";
 
 type Response = {
     session: string
@@ -13,7 +14,8 @@ type Response = {
 type NotificationPlacement = NotificationArgsProps['placement'];
 
 
-export default function Plugin({ setlogined } : {setlogined :  React.Dispatch<React.SetStateAction<boolean>>}) {
+export default function Plugin() {
+    const {setLogined} = useAuth()
     const [api, contextHolder] = notification.useNotification();
     const openNotification = (placement: NotificationPlacement, msg: string) => {
         api.info({
@@ -54,7 +56,7 @@ export default function Plugin({ setlogined } : {setlogined :  React.Dispatch<Re
                             document.cookie = `SESSION=${data.session}`
                             window.location.href = "/"
                         }
-                        setlogined(true)
+                        setLogined(true)
                     } else {
                         const data: Response = await res.json()
                         openNotification("top", data.msg)

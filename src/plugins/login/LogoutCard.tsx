@@ -1,6 +1,7 @@
 import {Button, Card} from "antd";
-import React, {useContext} from "react";
+import {useContext} from "react";
 import {ConfigContext} from "../../config.tsx";
+import {useAuth} from "../AuthContext.tsx";
 
 function clearCookie() {
     const cookies = document.cookie.split(";");
@@ -13,10 +14,10 @@ function clearCookie() {
     }
 }
 
-export default function Plugin({setLogined}: { setLogined: React.Dispatch<React.SetStateAction<boolean>> }) {
+export default function Plugin() {
     const config = useContext(ConfigContext);
     const API = config?.API_URL + "/api/v1/auth/logout";
-
+    const {setLogined} = useAuth()
     return (
         <div>
             <Card title="Logout">
@@ -28,7 +29,7 @@ export default function Plugin({setLogined}: { setLogined: React.Dispatch<React.
                             'Authorization': 'Bearer ' + document.cookie ? document.cookie.split("=")[1] : ''
                         }
                     })
-                    setLogined(() => false)
+                    setLogined(false)
                     document.cookie = ""
                     clearCookie()
                     window.location.href = "/"
