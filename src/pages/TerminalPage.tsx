@@ -3,6 +3,7 @@ import {useContext, useEffect, useState} from "react";
 import {ConfigContext} from "../config.tsx";
 import {ProCard} from "@ant-design/pro-components";
 import {Button, Divider} from "antd";
+import {useAuth} from "../plugins/AuthContext.tsx";
 
 type screen = {
     name: string,
@@ -13,7 +14,13 @@ export default function Page() {
     const config = useContext(ConfigContext);
     const [screen, setScreen] = useState([])
     const [term,] = useState(() => new Terminal());
+
+    // 验证是否登录
     const [webSocket, setWebSocket] = useState<WebSocket | undefined>();
+        const { logined } = useAuth()
+    if (!logined) {
+        window.location.href = "/login"
+    }
 
     term.resize(140, 45);
 

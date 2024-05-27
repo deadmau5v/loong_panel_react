@@ -1,8 +1,9 @@
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
-import {Suspense, lazy} from 'react';
+import {Suspense, lazy, useEffect} from 'react';
 import {PageContainer, ProLayout} from '@ant-design/pro-components';
 import defaultProps from "./aside/AsideProps.tsx";
 import logo from "./assets/logo.png";
+import {useAuth} from "./plugins/AuthContext.tsx";
 
 const HomePage = lazy(() => import('./pages/HomePage'));
 const TerminalPage = lazy(() => import('./pages/TerminalPage'));
@@ -13,8 +14,14 @@ const LoginPage = lazy(() => import('./pages/LoginPage'));
 
 
 function App() {
-
-
+    const {setLogined} = useAuth()
+    useEffect(() => {
+        if (localStorage.getItem('SESSION')) {
+            setLogined(true)
+        } else {
+            setLogined(false)
+        }
+    }, [setLogined])
     return (
         <Router>
             <div id="test-pro-layout" style={{height: '100vh'}}>
@@ -33,7 +40,7 @@ function App() {
 
                         return (
                             <div onClick={() => {
-                                 window.location.href = menuItemProps.path ? menuItemProps.path : "";
+                                window.location.href = menuItemProps.path ? menuItemProps.path : "";
                             }}>
                                 {defaultDom}
                             </div>

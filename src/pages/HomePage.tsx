@@ -1,5 +1,6 @@
 import {ProCard} from "@ant-design/pro-components";
-import {lazy, Suspense} from 'react';
+import {lazy, Suspense, useEffect} from 'react';
+import {useAuth} from "../plugins/AuthContext.tsx";
 
 const Charts = lazy(() => import('../plugins/home/Charts.tsx'));
 const SystemInfo = lazy(() => import('../plugins/home/SystemInfo.tsx'));
@@ -7,6 +8,14 @@ const Power = lazy(() => import('../plugins/home/Power.tsx'));
 
 export default function Page() {
     const pageName = "home"
+
+    const { logined } = useAuth()
+
+    useEffect(() => {
+        if (!logined) {
+            window.location.href = "/login";
+        }
+    }, [logined]);
 
     const content = <>
         {/* 左右 布局 */}

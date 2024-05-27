@@ -16,6 +16,7 @@ type NotificationPlacement = NotificationArgsProps['placement'];
 
 export default function Plugin() {
     const {setLogined} = useAuth()
+
     const [api, contextHolder] = notification.useNotification();
     const openNotification = (placement: NotificationPlacement, msg: string) => {
         api.info({
@@ -46,19 +47,21 @@ export default function Plugin() {
                         'Content-Type': 'application/json',
                         'Cookie': document.cookie,
                         'Authorization': 'Bearer ' + document.cookie ? document.cookie.split("=")[1] : ''
-
                     }
                 }).then(async res => {
+                    const data: Response = await res.json()
                     if (res.status === 200) {
                         // 设置Cookie
-                        const data: Response = await res.json()
                         if (data.code === 200) {
                             document.cookie = `SESSION=${data.session}`
+                            localStorage.setItem('SESSION', data.session)
+                            setLogined(true)
+                            console.log("登录成功")
                             window.location.href = "/"
+                        } else {
+                            openNotification("top", data.msg)
                         }
-                        setLogined(true)
                     } else {
-                        const data: Response = await res.json()
                         openNotification("top", data.msg)
                     }
                 })

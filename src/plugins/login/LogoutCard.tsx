@@ -31,6 +31,7 @@ export default function Plugin() {
                     })
                     setLogined(false)
                     document.cookie = ""
+                    localStorage.clear()
                     clearCookie()
                     window.location.href = "/"
                 }

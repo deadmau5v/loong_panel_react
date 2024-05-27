@@ -1,6 +1,7 @@
 import React, {useContext, useEffect, useState, lazy, Suspense} from "react";
 import {ConfigContext} from "../config.tsx";
 import {FolderOutlined, FileOutlined} from '@ant-design/icons';
+import {useAuth} from "../plugins/AuthContext.tsx";
 
 const FileComponent = lazy(() => import('../plugins/file/File.tsx'));
 
@@ -78,6 +79,13 @@ export default function Page() {
     const config = useContext(ConfigContext);
     const API = config?.API_URL + "/api/v1/files/dir"
     const [dataSource, setDataSource] = useState<File[]>([])
+
+    // 验证是否登录
+    const {logined} = useAuth()
+    if (!logined) {
+        window.location.href = "/login"
+    }
+
     const columns = [
         {
             title: '',
