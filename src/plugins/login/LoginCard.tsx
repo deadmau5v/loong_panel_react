@@ -1,100 +1,129 @@
-import {ProForm, ProFormRadio, ProFormText} from '@ant-design/pro-components';
-import {UserOutlined, LockOutlined} from '@ant-design/icons';
-import {useContext} from "react";
-import {ConfigContext} from "../../config.tsx";
-import {NotificationArgsProps, notification} from 'antd';
-import {useAuth} from "../AuthContext.tsx";
-
-type Response = {
-    session: string
-    code: number
-    msg: string
-}
-
-type NotificationPlacement = NotificationArgsProps['placement'];
-
+import {LoginForm, ProFormText} from '@ant-design/pro-components';
+import {Tabs} from "antd"
+import logo from "../../assets/logo.png"
+import {useState} from "react";
+import {config} from "../../config.tsx";
 
 export default function Plugin() {
-    const {setLogined} = useAuth()
-
-    const [api, contextHolder] = notification.useNotification();
-    const openNotification = (placement: NotificationPlacement, msg: string) => {
-        api.info({
-            message: `登录失败`,
-            description: msg,
-            icon: <UserOutlined style={{color: 'rgba(255,77,81,0.58)'}}/>,
-            placement,
-        });
-    };
-    const config = useContext(ConfigContext);
-    const API = config?.API_URL + "/api/v1/auth/login";
+    const [loginType, setLoginType] = useState('account');
+    const PasswordForm = <>
+        <ProFormText.Password
+            name="password"
+            fieldProps={{
+                size: 'large',
+                strengthText:
+                    '为了您的数据安全，请设置长度6位以上的密码!',
+                statusRender: (value) => {
+                    const getStatus = () => {
+                        if (value && value.length > 12) {
+                            return 'ok';
+                        }
+                        if (value && value.length > 6) {
+                            return 'pass';
+                        }
+                        return 'poor';
+                    };
+                    const status = getStatus();
+                    if (status === 'pass') {
+                        return (
+                            <div>
+                                强度：中
+                            </div>
+                        );
+                    }
+                    if (status === 'ok') {
+                        return (
+                            <div>
+                                强度：强
+                            </div>
+                        );
+                    }
+                    return (
+                        <div> 强度：弱</div>
+                    );
+                },
+            }}
+            placeholder={'密码: 123456'}
+            rules={[
+                {
+                    required: true,
+                    message: '请输入密码！',
+                },
+            ]}
+        />
+    </>
 
     return <>
-        {contextHolder}
-        <ProFormRadio.Group
-            style={{
-                margin: 16,
-            }}
-            radioType="button"
-        />
-        <ProForm
-            title="LoongPanel"
+        <LoginForm
+            logo={logo}
+            title={"LoongPanel"}
             onFinish={async (values) => {
-                fetch(API, {
+                fetch(config.API_URL + '/api/v1/auth/login', {
                     method: 'POST',
                     body: JSON.stringify(values),
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Cookie': document.cookie,
-                        'Authorization': 'Bearer ' + document.cookie ? document.cookie.split("=")[1] : ''
-                    }
-                }).then(async res => {
-                    const data: Response = await res.json()
-                    if (res.status === 200) {
-                        // 设置Cookie
-                        if (data.code === 200) {
-                            document.cookie = `SESSION=${data.session}`
-                            localStorage.setItem('SESSION', data.session)
-                            setLogined(true)
-                            console.log("登录成功")
-                            window.location.href = "/"
-                        } else {
-                            openNotification("top", data.msg)
-                        }
-                    } else {
-                        openNotification("top", data.msg)
+                }).then((response) => {
+                    if (response.status === 200) {
+                        response.json().then((data) => {
+                            localStorage.setItem('SESSION', data.session);
+                            window.location.href = '/';
+                        });
                     }
                 })
             }}
         >
-            <ProFormText
-                name="username"
-                fieldProps={{
-                    size: 'large',
-                    prefix: <UserOutlined className={'prefixIcon'}/>,
-                }}
-                placeholder={'用户名: admin or user'}
-                rules={[
+            <Tabs
+                centered
+                activeKey={loginType}
+                onChange={(activeKey) => setLoginType(activeKey)}
+                items={[
                     {
-                        required: true,
-                        message: '请输入用户名!',
+                        key: 'account',
+                        label: '账号登录',
                     },
+                    {
+                        key: 'mail',
+                        label: '邮箱登录',
+                    },
+
                 ]}
             />
-            <ProFormText.Password
-                name="password"
-                fieldProps={{
-                    size: 'large',
-                    prefix: <LockOutlined className={'prefixIcon'}/>,
-                }}
-                placeholder={'密码: 123456'}
-                rules={[
-                    {
-                        required: true,
-                        message: '请输入密码！',
-                    },
-                ]}
-            />
-        </ProForm>
+            {loginType === 'account' && (
+                <>
+                    <ProFormText
+                        name="username"
+                        fieldProps={{
+                            size: 'large',
+                        }}
+                        placeholder={'账号: admin / user'}
+                        rules={[
+                            {
+                                required: true,
+                                message: '请输入用户名!',
+                            },
+                        ]}
+                    />
+                    {PasswordForm}
+                </>
+            )}
+            {loginType === 'mail' && (
+                <>
+                    <ProFormText
+                        name="email"
+                        fieldProps={{
+                            size: 'large',
+                        }}
+                        placeholder={'邮箱: admin@qq.com / user@qq.com'}
+                        rules={[
+                            {
+                                required: true,
+                                message: '请输入邮箱!',
+                            },
+                        ]}
+                    />
+                    {PasswordForm}
+
+                </>
+            )}
+        </LoginForm>
     </>
 }

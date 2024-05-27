@@ -28,6 +28,26 @@ export default {
                 path: "/user",
                 name: "用户",
                 icon: <UserOutlined/>,
+            },
+            {
+                path: "/auth",
+                name: "权限",
+                icon: <UserOutlined/>,
+            //     二级菜单
+                routes: [
+                    {
+                        path: "/auth/global",
+                        name: "全局设置",
+                    },
+                    {
+                        path: "/auth/user",
+                        name: "用户管理",
+                    },
+                    {
+                        path: "/auth/role",
+                        name: "角色管理",
+                    },
+                ]
             }
         ],
     },

@@ -13,7 +13,10 @@ export default function PowerControl() {
     const shutdown = async () => {
         if (isPowerOn) {
             const response = await fetch(getApiUrl("power/shutdown"), {
-                method: "POST"
+                method: "POST",
+                headers: {
+                    'Authorization': localStorage.getItem("SESSION") || ""
+                }
             });
             if (response.ok) {
                 setPowerStatus(false);
@@ -24,7 +27,11 @@ export default function PowerControl() {
     const reboot = async () => {
         if (isPowerOn) {
             const response = await fetch(getApiUrl("power/reboot"), {
-                method: "POST"
+                method: "POST",
+                headers: {
+                        'Authorization': localStorage.getItem("SESSION") || ""
+
+                }
             });
             if (response.ok) {
                 setPowerStatus(false);

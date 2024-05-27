@@ -11,6 +11,9 @@ const UserPage = lazy(() => import('./pages/UserPage'));
 const FilesPage = lazy(() => import('./pages/FilesPage'));
 const Error404Page = lazy(() => import('./pages/Error404Page'));
 const LoginPage = lazy(() => import('./pages/LoginPage'));
+const AuthRole = lazy(() => import('./pages/auth/role.tsx'));
+const AuthUser = lazy(() => import('./pages/auth/user.tsx'));
+const AuthGlobal = lazy(() => import('./pages/auth/global.tsx'));
 
 
 function App() {
@@ -55,6 +58,9 @@ function App() {
                                 <Route path="/terminal" element={<TerminalPage/>}/>
                                 <Route path="/login" element={<LoginPage/>}/>
                                 <Route path="/user" element={<UserPage/>}/>
+                                <Route path="/auth/global" element={<AuthGlobal/>}/>
+                                <Route path="/auth/user" element={<AuthUser/>}/>
+                                <Route path="/auth/role" element={<AuthRole/>}/>
                                 <Route path="*" element={<Error404Page/>}/>
                             </Routes>
                         </Suspense>

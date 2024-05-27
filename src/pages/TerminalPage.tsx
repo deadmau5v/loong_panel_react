@@ -17,7 +17,7 @@ export default function Page() {
 
     // 验证是否登录
     const [webSocket, setWebSocket] = useState<WebSocket | undefined>();
-        const { logined } = useAuth()
+    const {logined} = useAuth()
     if (!logined) {
         window.location.href = "/login"
     }
@@ -43,8 +43,7 @@ export default function Page() {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Cookie': document.cookie,
-                'Authorization': 'Bearer ' + document.cookie ? document.cookie.split("=")[1] : ''
+                'Authorization': localStorage.getItem("SESSION") || ""
             }
         });
         if (response.ok) {
@@ -58,8 +57,7 @@ export default function Page() {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Cookie': document.cookie,
-                'Authorization': 'Bearer ' + document.cookie ? document.cookie.split("=")[1] : ''
+                'Authorization': localStorage.getItem("SESSION") || ""
             }
         });
         if (response.ok) {
