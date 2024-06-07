@@ -3,6 +3,8 @@ import {
     FolderOpenFilled,
     MergeFilled,
     UserOutlined,
+    ContactsOutlined,
+    ContainerOutlined,
 } from '@ant-design/icons';
 
 export default {
@@ -32,7 +34,7 @@ export default {
             {
                 path: "/auth",
                 name: "权限",
-                icon: <UserOutlined/>,
+                icon: <ContactsOutlined />,
             //     二级菜单
                 routes: [
                     {
@@ -48,6 +50,10 @@ export default {
                         name: "角色管理",
                     },
                 ]
+            }, {
+                path: "/log",
+                name: "日志",
+                icon: <ContainerOutlined />,
             }
         ],
     },
