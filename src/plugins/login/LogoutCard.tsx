@@ -25,8 +25,7 @@ export default function Plugin() {
                     await fetch(API, {
                         method: 'POST',
                         headers: {
-                            'Cookie': document.cookie,
-                            'Authorization': 'Bearer ' + document.cookie ? document.cookie.split("=")[1] : ''
+                            'Authorization': localStorage.getItem("SESSION") || "",
                         }
                     })
                     setLogined(false)

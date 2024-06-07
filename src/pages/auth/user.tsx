@@ -1,5 +1,5 @@
 import {ReactNode, useEffect, useState} from 'react';
-import {ProColumns, ProTable} from '@ant-design/pro-components';
+import {ProCard, ProColumns, ProTable} from '@ant-design/pro-components';
 import {Button, Popconfirm, message} from 'antd';
 import {config} from '../../config.tsx';
 
@@ -11,10 +11,11 @@ interface User {
 }
 
 function Page() {
+    const [MsgApi, contextHolder] = message.useMessage();
     const [datasource, setDatasource] = useState([]);
 
     useEffect(() => {
-        fetch(config.API_URL + '/api/v1/auth/user', {
+        fetch(config.API_URL + '/api/v1/auth/users', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -38,14 +39,34 @@ function Page() {
                 'Authorization': localStorage.getItem('SESSION') || '',
             },
 
-        })
-        message.success('用户已删除');
-        setDatasource(datasource.filter((item: User) => item.id !== id));
+        }).then(
+            async response => {
+                if (!response.ok) {
+                    if (response.status === 401) {
+                        const data = await response.json();
+                        if (data.msg) {
+                            MsgApi.destroy();
+                            MsgApi.error(data.msg)
+                        }
+                    }
+                }
+                return response.json();
+            }
+        ).then(data => {
+                if (data.status === 0) {
+                    MsgApi.success("删除用户成功");
+                    setDatasource(datasource.filter((item: User) => item.id !== id));
+                    setDatasource(datasource.filter((item: User) => item.id !== id));
+                } else {
+                    MsgApi.error(data.msg);
+                }
+            })
+
     };
 
     const handleEdit = (record: User) => {
         // You can set up a modal form for editing here
-        message.info(`正在编辑 ${record.name}`);
+        MsgApi.info(`正在编辑 ${record.name}`);
     };
     const columns: ProColumns<User>[] = [
         {
@@ -89,16 +110,21 @@ function Page() {
 
     return (
         <>
-            <ProTable
-                columns={columns}
-                dataSource={datasource}
-                rowKey="id"
-                pagination={{
-                    showQuickJumper: true,
-                    pageSize: 5,
-                }}
-                search={false}
-            />
+            {contextHolder}
+            <ProCard>
+                <ProTable
+                    columns={columns}
+                    dataSource={datasource}
+                    rowKey="id"
+                    toolbar={{style: {padding: 0, height: 0}}}
+                    pagination={{
+                        showQuickJumper: true,
+                        pageSize: 5,
+                    }}
+                    search={false}
+                />
+            </ProCard>
+
         </>
     );
 }

@@ -26,8 +26,7 @@ export default function Plugin() {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Cookie': document.cookie,
-                'Authorization': 'Bearer ' + document.cookie ? document.cookie.split("=")[1] : ''
+                'Authorization': localStorage.getItem("SESSION") || "",
             }
         });
         if (response.ok) {

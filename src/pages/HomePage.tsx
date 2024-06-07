@@ -10,7 +10,6 @@ export default function Page() {
     const pageName = "home"
 
     const { logined } = useAuth()
-
     useEffect(() => {
         if (!logined) {
             window.location.href = "/login";

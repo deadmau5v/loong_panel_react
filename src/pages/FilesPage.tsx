@@ -41,8 +41,7 @@ function setDirFiles(path: string, setter: React.Dispatch<React.SetStateAction<F
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
-            'Cookie': document.cookie,
-            'Authorization': 'Bearer ' + document.cookie ? document.cookie.split("=")[1] : ''
+            'Authorization': localStorage.getItem("SESSION") || "",
 
         }
 
