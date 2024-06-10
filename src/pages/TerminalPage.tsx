@@ -34,12 +34,16 @@ export default function Page() {
         }
         getScreen()
     }, [])
-
+    let getWsUrl: (id: number) => string;
     const getApiUrl = (endpoint: string) => `${config?.API_URL}/api/v1/${endpoint}`;
-    const getWsUrl = (id: number) => `${config?.WS_URL}/api/ws/screen?id=${id}`;
+    if (config?.WS_URL != "") {
+        getWsUrl = (id: number) => `${config?.WS_URL}/api/ws/screen?id=${id}`;
+    } else {
+        getWsUrl = (id: number) => `ws://${window.location.host}/api/ws/screen?id=${id}`;
+    }
 
     const getScreen = async () => {
-        const response = await fetch(getApiUrl("screen/get_screens"), {
+        const response = await fetch(getApiUrl("screen/screen"), {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -53,8 +57,8 @@ export default function Page() {
     };
 
     const createScreen = async () => {
-        const response = await fetch(getApiUrl("screen/create"), {
-            method: 'GET',
+        const response = await fetch(getApiUrl("screen/screen"), {
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': localStorage.getItem("SESSION") || ""
@@ -63,7 +67,7 @@ export default function Page() {
         if (response.ok) {
             const data = await response.json();
             console.log(data);
-            getScreen();
+            await getScreen();
         }
     }
 

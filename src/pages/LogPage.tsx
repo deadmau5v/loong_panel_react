@@ -2,6 +2,7 @@ import {ConfigContext} from "../config.tsx";
 import {useContext, useEffect, useState} from "react";
 import {ProCard} from "@ant-design/pro-components";
 import {Tabs} from "antd";
+import Log from "../plugins/Log.tsx";
 
 export default function Page() {
     const config = useContext(ConfigContext);
@@ -34,7 +35,8 @@ export default function Page() {
     const items = logs.map((log, index) => {
         return {
             label: log,
-            key: index.toString()
+            key: index.toString(),
+            children: <Log name={log}/>
         }
     })
 
@@ -42,7 +44,8 @@ export default function Page() {
         <>
             <ProCard>
                 <Tabs
-                items={items}/>
+                    items={items}>
+                </Tabs>
             </ProCard>
         </>
     );
