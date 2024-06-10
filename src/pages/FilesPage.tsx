@@ -1,6 +1,7 @@
 import React, {useContext, useEffect, useState, lazy, Suspense} from "react";
 import {ConfigContext} from "../config.tsx";
 import {FolderOutlined, FileOutlined} from '@ant-design/icons';
+import {Button, Flex, Input} from 'antd';
 import {useAuth} from "../plugins/AuthContext.tsx";
 
 const FileComponent = lazy(() => import('../plugins/file/File.tsx'));
@@ -36,19 +37,18 @@ export type File = {
 }
 
 // 获取目录下的文件
-function setDirFiles(path: string, setter: React.Dispatch<React.SetStateAction<File[]>>, API: string) {
+function setDirFiles(path: string, setter: React.Dispatch<React.SetStateAction<File[]>>, API: string, setpath: React.Dispatch<React.SetStateAction<string>>) {
+    setpath(path)
     fetch(API + "?path=" + encodeURIComponent(path), {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
             'Authorization': localStorage.getItem("SESSION") || "",
-
         }
 
     })
         .then(res => res.json())
         .then(data => {
-            console.log(data)
             setter(data.files)
         })
 }
@@ -78,7 +78,7 @@ export default function Page() {
     const config = useContext(ConfigContext);
     const API = config?.API_URL + "/api/v1/files/dir"
     const [dataSource, setDataSource] = useState<File[]>([])
-
+    const [path, setPath] = useState<string>("/")
     // 验证是否登录
     const {logined} = useAuth()
     if (!logined) {
@@ -100,7 +100,7 @@ export default function Page() {
             key: 'name',
             render: (_dom: React.ReactNode, record: File) => (
                 record.isDir ?
-                    <a onClick={() => setDirFiles(record.path, setDataSource, API)}>{record.name}</a> : record.name
+                    <a onClick={() => setDirFiles(record.path, setDataSource, API, setPath)}>{record.name}</a> : record.name
             ),
             sorter: (a: File, b: File) => a.name.localeCompare(b.name),
         },
@@ -149,12 +149,26 @@ export default function Page() {
 
     useEffect(() => {
         // 初始化时加载根目录文件
-        setDirFiles("/", setDataSource, API)
+        setDirFiles(path, setDataSource, API, setPath)
     }, [])
 
     return (
         <>
             <Suspense fallback={<div>Loading...</div>}>
+                <Flex>
+                    <Button onClick={() => {
+                        if (path === "/") {
+                            return
+                        }
+                        const paths = path.split("/")
+                        paths.pop()
+                        setDirFiles(paths.join("/"), setDataSource, API, setPath)
+                    }}>上一级
+                    </Button>
+                    <Input value={path} onChange={() => {
+                    }}/>
+                </Flex>
+
                 <FileComponent columns={columns} dataSource={dataSource}/>
             </Suspense>
         </>
