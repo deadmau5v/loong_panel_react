@@ -18,6 +18,7 @@ type File = {
     showTime: boolean;// 是否显示时间
     showEdit: boolean;// 是否显示编辑按钮
     showSize: boolean;// 是否显示大小
+    content: string
 }
 
 type FileComponentProps = {

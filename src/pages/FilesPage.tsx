@@ -1,8 +1,9 @@
 import React, {useContext, useEffect, useState, lazy, Suspense} from "react";
-import {ConfigContext} from "../config.tsx";
+import {config, ConfigContext} from "../config.tsx";
 import {FolderOutlined, FileOutlined} from '@ant-design/icons';
-import {Button, Flex, Input} from 'antd';
+import {Button, Drawer, Flex, Input} from 'antd';
 import {useAuth} from "../plugins/AuthContext.tsx";
+import {Prism as SyntaxHighlighter} from 'react-syntax-highlighter';
 
 const FileComponent = lazy(() => import('../plugins/file/File.tsx'));
 
@@ -34,6 +35,7 @@ export type File = {
     showTime: boolean;// 是否显示时间
     showEdit: boolean;// 是否显示编辑按钮
     showSize: boolean;// 是否显示大小
+    content: string;
 }
 
 // 获取目录下的文件
@@ -49,6 +51,7 @@ function setDirFiles(path: string, setter: React.Dispatch<React.SetStateAction<F
     })
         .then(res => res.json())
         .then(data => {
+            console.log(data.files)
             setter(data.files)
         })
 }
@@ -73,6 +76,37 @@ function caseGroup(group: number) {
             return group
     }
 }
+
+async function readFile(file: File) {
+    const API = config.API_URL + "/api/v1/files/read?path=";
+    try {
+        const res = await fetch(API + encodeURIComponent(file.path), {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': localStorage.getItem("SESSION") || "",
+            }
+        });
+        const data = await res.json();
+        file.content = data.data;
+    } catch (error) {
+        console.error("Failed to read file:", error);
+    }
+}
+
+const languageMap: { [key: string]: string } = {
+    'go': 'go',
+    'py': 'python',
+    'js': 'javascript',
+    'java': 'java',
+    'c': 'c',
+    'cpp': 'cpp',
+    'html': 'html',
+    'css': 'css',
+    'json': 'json',
+    'sh': 'bash',
+    'bat': 'bat',
+};
 
 export default function Page() {
     const config = useContext(ConfigContext);
@@ -145,12 +179,63 @@ export default function Page() {
             dataIndex: 'time',
             key: 'time',
         },
+        {
+            title: '操作',
+            dataIndex: 'operation',
+            key: 'operation',
+            render: (_dom: React.ReactNode, record: File) => {
+                if ({
+                    "go": 1,
+                    "txt": 1,
+                    "java": 1,
+                    "py": 1,
+                    "c": 1,
+                    "cpp": 1,
+                    "js": 1,
+                    "html": 1,
+                    "css": 1,
+                    "md": 1,
+                    "json": 1,
+                    "xml": 1,
+                    "yml": 1,
+                    "yaml": 1,
+                    "conf": 1,
+                    "properties": 1,
+                    "sh": 1,
+                    "bat": 1,
+                    "cmd": 1,
+                    "ps1": 1,
+                    "psm1": 1,
+                    "psd1": 1,
+                    "ps1xml": 1,
+                    "ini": 1,
+                    "log": 1,
+                    "csv": 1,
+                    "tsv": 1,
+                    "svg": 1
+                }[record.ext] == 1) {
+                    return (
+                        <a onClick={async () => {
+                            await readFile(record)
+                            setSelectedFile(record);
+                            setDrawerVisible(true);
+
+                        }}>
+                            查看
+                        </a>
+                    );
+                }
+            },
+        }
     ]
 
     useEffect(() => {
         // 初始化时加载根目录文件
-        setDirFiles(path, setDataSource, API, setPath)
-    }, [])
+        setDirFiles(path, setDataSource, API, setPath);
+    }, [path, API]);
+
+    const [drawerVisible, setDrawerVisible] = useState<boolean>(false);
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
     return (
         <>
@@ -170,6 +255,26 @@ export default function Page() {
                 </Flex>
 
                 <FileComponent columns={columns} dataSource={dataSource}/>
+
+                <Drawer
+                    title="文件详情"
+                    placement="right"
+                    onClose={() => setDrawerVisible(false)}
+                    open={drawerVisible}
+                    width={1200}
+                >
+                    {selectedFile && (
+                        <div>
+                            <p><strong>文件名:</strong> {selectedFile.name}</p>
+                            <p>内容:</p>
+                            <SyntaxHighlighter
+                                language={languageMap[selectedFile.ext] || 'text'}
+                            >
+                                {selectedFile.content}
+                            </SyntaxHighlighter>
+                        </div>
+                    )}
+                </Drawer>
             </Suspense>
         </>
     )
