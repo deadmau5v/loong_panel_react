@@ -4,6 +4,7 @@ import {ConfigContext} from "../config.tsx";
 import {ProCard} from "@ant-design/pro-components";
 import {Button, Divider} from "antd";
 import {useAuth} from "../plugins/AuthContext.tsx";
+import {FitAddon} from 'xterm-addon-fit';
 
 type screen = {
     name: string,
@@ -21,14 +22,20 @@ export default function Page() {
     if (!logined) {
         window.location.href = "/login"
     }
-
-    term.resize(140, 45);
+    const fitAddon = new FitAddon()
 
     useEffect(() => {
         const terminalDiv = document.getElementById('terminal');
 
+        window.addEventListener('resize', () => {
+            fitAddon.fit();
+        });
+
         if (terminalDiv) {
+            term.loadAddon(fitAddon)
             term.open(terminalDiv);
+            fitAddon.fit()
+
             term.clear();
             term.writeln("欢迎使用 LoongPanel 终端")
         }
@@ -84,18 +91,22 @@ export default function Page() {
         term.writeln(`\n🔄   正在连接到窗口 [${id}] ...`);
         initializeWebSocket(id);
         term.writeln("✅   链接成功.");
+        fitAddon.fit()
         term.clear();
     }
 
     return (
         <>
-            <ProCard gutter={16}>
+            <ProCard gutter={20}>
                 <ProCard id="TerminalCard" direction="column">
                     <link rel="stylesheet" href="https://cdn1.d5v.cc/CDN/Project/LoongPanel/static/xterm.css"/>
-                    <div id="terminal"/>
+                    <div id="terminal" style={{
+                        height: "100%",
+                        width: "100%",
+                    }}/>
                 </ProCard>
-                <ProCard direction="column" id={"buttons"}>
-                    <Button type={"primary"} onClick={createScreen} id={"createScreen"}>创建窗口</Button>
+                <ProCard direction="column" id="buttons" style={{maxWidth: "20%"}}>
+                    <Button type="primary" onClick={createScreen} id="createScreen">创建窗口</Button>
                     <Divider/>
                     {
                         screen.map((item: screen) => (
