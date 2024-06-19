@@ -15,6 +15,7 @@ const AuthRole = lazy(() => import('./pages/auth/role.tsx'));
 const AuthUser = lazy(() => import('./pages/auth/user.tsx'));
 const AuthGlobal = lazy(() => import('./pages/auth/global.tsx'));
 const LogPage = lazy(() => import('./pages/LogPage.tsx'));
+const AppStore = lazy(() => import('./pages/AppStorePage.tsx'));
 
 function App() {
     const {setLogined} = useAuth()
@@ -62,6 +63,7 @@ function App() {
                                 <Route path="/auth/user" element={<AuthUser/>}/>
                                 <Route path="/auth/role" element={<AuthRole/>}/>
                                 <Route path="/log" element={<LogPage/>}/>
+                                <Route path="/appstore" element={<AppStore/>}/>
                                 <Route path="*" element={<Error404Page/>}/>
                             </Routes>
                         </Suspense>

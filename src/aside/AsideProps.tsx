@@ -54,6 +54,10 @@ export default {
                 path: "/log",
                 name: "日志",
                 icon: <ContainerOutlined />,
+            } ,  {
+                path: "/appstore",
+                name: "应用",
+                icon: <ContainerOutlined />,
             }
         ],
     },
