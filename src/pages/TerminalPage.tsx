@@ -37,7 +37,7 @@ export default function Page() {
             fitAddon.fit()
 
             term.clear();
-            term.writeln("欢迎使用 LoongPanel 终端")
+            term.writeln("欢迎使用 LoongPanel 终端 ...")
         }
         getScreen()
     }, [])
@@ -87,6 +87,8 @@ export default function Page() {
 
     const changeScreen = (id: number) => {
         webSocket?.close();
+        term.clear();
+        term.writeln("🔄   正在连接到窗口 ...");
         term.clear();
         term.writeln(`\n🔄   正在连接到窗口 [${id}] ...`);
         initializeWebSocket(id);
