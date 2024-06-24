@@ -16,6 +16,8 @@ const AuthUser = lazy(() => import('./pages/auth/user.tsx'));
 const AuthGlobal = lazy(() => import('./pages/auth/global.tsx'));
 const LogPage = lazy(() => import('./pages/LogPage.tsx'));
 const AppStore = lazy(() => import('./pages/AppStorePage.tsx'));
+const DockerContainer = lazy(() => import('./pages/docker/container.tsx'));
+const DockerImage = lazy(() => import('./pages/docker/image.tsx'));
 
 function App() {
     const {setLogined} = useAuth()
@@ -64,6 +66,8 @@ function App() {
                                 <Route path="/auth/role" element={<AuthRole/>}/>
                                 <Route path="/log" element={<LogPage/>}/>
                                 <Route path="/appstore" element={<AppStore/>}/>
+                                <Route path="/docker/container" element={<DockerContainer/>}/>
+                                <Route path="/docker/image" element={<DockerImage/>}/>
                                 <Route path="*" element={<Error404Page/>}/>
                             </Routes>
                         </Suspense>

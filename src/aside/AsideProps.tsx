@@ -34,8 +34,8 @@ export default {
             {
                 path: "/auth",
                 name: "权限",
-                icon: <ContactsOutlined />,
-            //     二级菜单
+                icon: <ContactsOutlined/>,
+                //     二级菜单
                 routes: [
                     {
                         path: "/auth/global",
@@ -53,11 +53,25 @@ export default {
             }, {
                 path: "/log",
                 name: "日志",
-                icon: <ContainerOutlined />,
-            } ,  {
+                icon: <ContainerOutlined/>,
+            }, {
                 path: "/appstore",
                 name: "应用",
-                icon: <ContainerOutlined />,
+                icon: <ContainerOutlined/>,
+            }, {
+                path: "/docker",
+                name: "Docker管理",
+                icon: <ContainerOutlined/>,
+                routes: [
+                    {
+                        path: "/docker/container",
+                        name: "容器",
+                    },
+                    {
+                        path: "/docker/image",
+                        name: "镜像",
+                    },
+                ]
             }
         ],
     },
