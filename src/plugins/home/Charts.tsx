@@ -95,7 +95,7 @@ export default function Plugin() {
         <>
             {/* 四个仪表盘 */}
             <Card id="Charts" className="card" title="性能监控">
-                <Flex justify="space-evenly" align="center">
+                <Flex justify="space-evenly">
                     <Chart title="Load" status={systemStatus}/>
                     <Chart title="CPU" status={systemStatus}/>
                     <Chart title="RAM" status={systemStatus}/>

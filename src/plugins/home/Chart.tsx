@@ -15,7 +15,7 @@ function ChangeMemory(n: number, showUnit: boolean = true) {
 
 function LoadItems(status: SystemStatus) {
     return <>
-        <Descriptions.Item label="平均负载">{status.average_load}%</Descriptions.Item>
+        <Descriptions.Item label="平均负载">{status.average_load.toFixed(2)}%</Descriptions.Item>
         <Descriptions.Item label="最近1分钟">{status.load1m}%</Descriptions.Item>
         <Descriptions.Item label="最近5分钟">{status.load5m}%</Descriptions.Item>
         <Descriptions.Item label="最近15分钟">{status.load15m}%</Descriptions.Item>
@@ -24,7 +24,7 @@ function LoadItems(status: SystemStatus) {
 
 function CPUItems(status: SystemStatus) {
     return <>
-        <Descriptions.Item label="平均负载">{status.cpu_usage.toFixed(2)}%</Descriptions.Item>
+        <Descriptions.Item label="工作负载">{status.cpu_usage.toFixed(2)}%</Descriptions.Item>
         <Descriptions.Item label="核心数量">{status.cpu_number} * {status.cpu_cores} Core</Descriptions.Item>
         <Descriptions.Item label="核心频率">{status.cpu_mhz} MHz</Descriptions.Item>
         <Descriptions.Item label="核心架构">{status.cpu_arch}</Descriptions.Item>
@@ -33,7 +33,7 @@ function CPUItems(status: SystemStatus) {
 
 function RAMItems(status: SystemStatus) {
     return <>
-        <Descriptions.Item label="内存占用">{status.memory_usage}%</Descriptions.Item>
+        <Descriptions.Item label="内存占用">{status.memory_usage.toFixed(2)}%</Descriptions.Item>
         <Descriptions.Item label="内存容量">{ChangeMemory(status.ram_total)}</Descriptions.Item>
         <Descriptions.Item label="内存频率">{status.ram_mhz} MHz</Descriptions.Item>
         <Descriptions.Item label="交换内存">{ChangeMemory(status.ram_swap)}</Descriptions.Item>
@@ -44,7 +44,7 @@ function DiskItems(status: SystemStatus) {
     // 只显示前两个磁盘
     status.disks = status.disks.slice(0, 2);
     return <>
-        <Descriptions.Item label="磁盘占用">{status.disk_usage}%</Descriptions.Item>
+        <Descriptions.Item label="磁盘占用">{status.disk_usage.toFixed(2)}%</Descriptions.Item>
         <Descriptions.Item label="磁盘容量">{ChangeMemory(status.disk_total)}</Descriptions.Item>
         {status.disks.map((disk, index) => {
             return <Descriptions.Item key={index}

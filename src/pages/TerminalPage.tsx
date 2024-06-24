@@ -31,7 +31,7 @@ export default function Page() {
             fitAddon.fit();
             term.writeln('欢迎使用 LoongPanel 终端 ...');
         }
-    }, []);
+    }, [fitAddon, term]);
 
     const showModal = () => {
         setIsModalVisible(true);
@@ -45,6 +45,7 @@ export default function Page() {
         term.writeln(`🔄   正在连接到窗口 [${user}@${host}:${port}] ...`);
         const wsUrl = config?.WS_URL ? `${config.WS_URL}/api/ws/screen?host=${host}&port=${port}&user=${user}&pwd=${pwd}` :
             `ws://${window.location.host}/api/ws/screen?host=${host}&port=${port}&user=${user}&pwd=${pwd}`;
+        console.log(wsUrl)
         const ws = new WebSocket(wsUrl);
         ws.onmessage = event => term.write(event.data);
         term.onData(data => ws.send(data));
@@ -62,7 +63,7 @@ export default function Page() {
             <Button type="primary" onClick={showModal} style={{margin: 10}}>
                 连接 SSH
             </Button>
-            <Modal title="输入 SSH 服务器信息" visible={isModalVisible} onCancel={handleCancel} footer={null}>
+            <Modal title="输入 SSH 服务器信息" open={isModalVisible} onCancel={handleCancel} footer={null}>
                 <ProForm onFinish={handleOk}>
                     <ProFormText name="host" label="Host" initialValue="127.0.0.1"/>
                     <ProFormText name="port" label="Port" initialValue="22"/>
