@@ -19,8 +19,8 @@ function Page() {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': localStorage.getItem('SESSION') || '',
             },
+            credentials: "include"
         }).then(response => {
             if (response.ok) {
                 response.json().then(data => {
@@ -36,8 +36,8 @@ function Page() {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': localStorage.getItem('SESSION') || '',
             },
+            credentials: "include"
 
         }).then(
             async response => {
@@ -53,14 +53,14 @@ function Page() {
                 return response.json();
             }
         ).then(data => {
-                if (data.status === 0) {
-                    MsgApi.success("删除用户成功");
-                    setDatasource(datasource.filter((item: User) => item.id !== id));
-                    setDatasource(datasource.filter((item: User) => item.id !== id));
-                } else {
-                    MsgApi.error(data.msg);
-                }
-            })
+            if (data.status === 0) {
+                MsgApi.success("删除用户成功");
+                setDatasource(datasource.filter((item: User) => item.id !== id));
+                setDatasource(datasource.filter((item: User) => item.id !== id));
+            } else {
+                MsgApi.error(data.msg);
+            }
+        })
 
     };
 
@@ -111,7 +111,7 @@ function Page() {
     return (
         <>
             {contextHolder}
-            <ProCard>
+            <ProCard style={{padding: 10}}>
                 <ProTable
                     columns={columns}
                     dataSource={datasource}

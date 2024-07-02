@@ -2,10 +2,9 @@ import React, {useContext, useEffect, useState, lazy, Suspense} from "react";
 import {config, ConfigContext} from "../config.tsx";
 import {FolderOutlined, FileOutlined} from '@ant-design/icons';
 import {Button, Drawer, Flex, Input} from 'antd';
-import {useAuth} from "../plugins/AuthContext.tsx";
 import {Prism as SyntaxHighlighter} from 'react-syntax-highlighter';
 
-const FileComponent = lazy(() => import('../plugins/file/File.tsx'));
+const FileComponent = lazy(() => import('../Components/file/File.tsx'));
 
 
 // 转换内存单位
@@ -45,8 +44,8 @@ function setDirFiles(path: string, setter: React.Dispatch<React.SetStateAction<F
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': localStorage.getItem("SESSION") || "",
-        }
+        },
+        credentials: "include"
 
     })
         .then(res => res.json())
@@ -84,8 +83,8 @@ async function readFile(file: File) {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': localStorage.getItem("SESSION") || "",
-            }
+            },
+            credentials: "include"
         });
         const data = await res.json();
         file.content = data.data;
@@ -113,11 +112,6 @@ export default function Page() {
     const API = config?.API_URL + "/api/v1/files/dir"
     const [dataSource, setDataSource] = useState<File[]>([])
     const [path, setPath] = useState<string>("/")
-    // 验证是否登录
-    const {logined} = useAuth()
-    if (!logined) {
-        window.location.href = "/login"
-    }
 
     const columns = [
         {

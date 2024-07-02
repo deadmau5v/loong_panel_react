@@ -1,33 +1,29 @@
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
-import {Suspense, lazy, useEffect} from 'react';
+import {Suspense, lazy} from 'react';
 import {PageContainer, ProLayout} from '@ant-design/pro-components';
-import defaultProps from "./aside/AsideProps.tsx";
+import defaultProps from "./Components/aside/AsideProps.tsx";
 import logo from "./assets/logo.png";
-import {useAuth} from "./plugins/AuthContext.tsx";
 
-const HomePage = lazy(() => import('./pages/HomePage'));
-const TerminalPage = lazy(() => import('./pages/TerminalPage'));
-const UserPage = lazy(() => import('./pages/UserPage'));
-const FilesPage = lazy(() => import('./pages/FilesPage'));
-const Error404Page = lazy(() => import('./pages/Error404Page'));
-const LoginPage = lazy(() => import('./pages/LoginPage'));
-const AuthRole = lazy(() => import('./pages/auth/role.tsx'));
-const AuthUser = lazy(() => import('./pages/auth/user.tsx'));
-const AuthGlobal = lazy(() => import('./pages/auth/global.tsx'));
-const LogPage = lazy(() => import('./pages/LogPage.tsx'));
-const AppStore = lazy(() => import('./pages/AppStorePage.tsx'));
-const DockerContainer = lazy(() => import('./pages/docker/container.tsx'));
-const DockerImage = lazy(() => import('./pages/docker/image.tsx'));
+const HomePage = lazy(() => import('./Views/HomePage'));
+const TerminalPage = lazy(() => import('./Views/TerminalPage'));
+const UserPage = lazy(() => import('./Views/UserPage'));
+const FilesPage = lazy(() => import('./Views/FilesPage'));
+const Error404Page = lazy(() => import('./Views/Error404Page'));
+const LoginPage = lazy(() => import('./Views/LoginPage'));
+const AuthRole = lazy(() => import('./Views/auth/role.tsx'));
+const AuthUser = lazy(() => import('./Views/auth/user.tsx'));
+const AuthGlobal = lazy(() => import('./Views/auth/global.tsx'));
+const LogPage = lazy(() => import('./Views/LogPage.tsx'));
+const AppStore = lazy(() => import('./Views/AppStorePage.tsx'));
+const DockerContainer = lazy(() => import('./Views/docker/container.tsx'));
+const DockerImage = lazy(() => import('./Views/docker/image.tsx'));
 
 function App() {
-    const {setLogined} = useAuth()
-    useEffect(() => {
-        if (localStorage.getItem('SESSION')) {
-            setLogined(true)
-        } else {
-            setLogined(false)
-        }
-    }, [setLogined])
+    // 检查登录状态
+    if (!localStorage.getItem("isLogin") && window.location.pathname != "/login") {
+        window.location.href = "/login";
+    }
+
     return (
         <Router>
             <div id="test-pro-layout" style={{height: '100vh'}}>

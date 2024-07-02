@@ -55,8 +55,8 @@ function Page() {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': localStorage.getItem('SESSION') || '',
             },
+            credentials: "include"
         })
             .then(async response => {
                 if (!response.ok) {
@@ -114,8 +114,8 @@ function Page() {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': localStorage.getItem('SESSION') || '',
             },
+            credentials: "include"
         }).then(response => {
             if (response.ok) {
                 response.json().then(data => {
@@ -159,7 +159,7 @@ function Page() {
     return (
         <>
             {contextHolder}
-            <ProCard>
+            <ProCard style={{padding: 10}}>
                 <ProTable<Role>
                     columns={columns}
                     dataSource={datasource}

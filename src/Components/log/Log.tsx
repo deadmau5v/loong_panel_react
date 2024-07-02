@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {config} from "../config.tsx";
+import {config} from "../../config.tsx";
 import {ProTable} from "@ant-design/pro-components";
 import {Button} from "antd";
 
@@ -13,8 +13,8 @@ export default function Log({name}: { name: string }) {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': localStorage.getItem("SESSION") || ""
-            }
+            },
+            credentials: "include"
         }).then(res => res.json()).then(data => {
             if (data.status == 0) {
                 setColumns(data.data[0])
@@ -26,8 +26,8 @@ export default function Log({name}: { name: string }) {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': localStorage.getItem("SESSION") || ""
-            }
+            },
+            credentials: "include"
         }).then(res => res.json()).then(data => {
             setContent(data.data)
         })
@@ -36,7 +36,7 @@ export default function Log({name}: { name: string }) {
     useEffect(() => {
         // 获取日志
         GetLog()
-    }, [])
+    }, [GetLog])
 
 
     const clearLogs = async () => {
@@ -45,8 +45,8 @@ export default function Log({name}: { name: string }) {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': localStorage.getItem("SESSION") || ""
-            }
+            },
+            credentials: "include"
         });
         GetLog();
     }

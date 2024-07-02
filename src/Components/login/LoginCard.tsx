@@ -43,7 +43,7 @@ export default function Plugin() {
                     );
                 },
             }}
-            placeholder={'密码: 123456'}
+            placeholder={'密码'}
             rules={[
                 {
                     required: true,
@@ -61,12 +61,14 @@ export default function Plugin() {
                 fetch(config.API_URL + '/api/v1/auth/login', {
                     method: 'POST',
                     body: JSON.stringify(values),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include'
                 }).then((response) => {
                     if (response.status === 200) {
-                        response.json().then((data) => {
-                            localStorage.setItem('SESSION', data.session);
-                            window.location.href = '/';
-                        });
+                        localStorage.setItem("isLogin", "true")
+                        window.location.href = "/"
                     }
                 })
             }}
@@ -94,7 +96,7 @@ export default function Plugin() {
                         fieldProps={{
                             size: 'large',
                         }}
-                        placeholder={'账号: admin / user'}
+                        placeholder={'账号'}
                         rules={[
                             {
                                 required: true,

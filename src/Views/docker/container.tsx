@@ -67,8 +67,8 @@ export default function Page() {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': localStorage.getItem("SESSION") || "",
-                }
+                },
+                credentials: "include"
             });
             const result = await response.json();
             if (result.code === 0) {
@@ -161,7 +161,7 @@ export default function Page() {
                             <Descriptions.Item
                                 label="名称">{detailData.Names.map((x) => (x.replace("/", ""))).join(', ')}</Descriptions.Item>
                             <Descriptions.Item label="镜像">{detailData.Image}</Descriptions.Item>
-                            <Descriptions.Item label="镜像ID">{detailData.ImageID}</Descriptions.Item>
+                            <Descriptions.Item label="镜像ID">{detailData.ImageID.replace("sha256:", "")}</Descriptions.Item>
                             <Descriptions.Item label="命令">{detailData.Command}</Descriptions.Item>
                             <Descriptions.Item label="网络模式">{detailData.HostConfig.NetworkMode}</Descriptions.Item>
                             <Descriptions.Item

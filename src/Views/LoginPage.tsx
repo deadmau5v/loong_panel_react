@@ -1,4 +1,4 @@
-import LoginCard from '../plugins/login/LoginCard.tsx';
+import LoginCard from '../Components/login/LoginCard.tsx';
 import {ProCard} from "@ant-design/pro-components";
 
 const LoginForm = () => {

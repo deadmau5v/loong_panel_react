@@ -22,8 +22,8 @@ export default function Page() {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': localStorage.getItem("SESSION") || "",
-            }
+            },
+            credentials: "include"
         })
             .then(response => response.json())
             .then(data => {
@@ -87,8 +87,8 @@ export default function Page() {
                                                 method: "POST",
                                                 headers: {
                                                     'Content-Type': 'application/json',
-                                                    'Authorization': localStorage.getItem("SESSION") || "",
-                                                }
+                                                },
+                                                credentials: "include"
                                             }).then(response => response.json()).then(
                                                 (data) => {
                                                     messageApi.destroy()
@@ -109,8 +109,8 @@ export default function Page() {
                                                 method: "DELETE",
                                                 headers: {
                                                     'Content-Type': 'application/json',
-                                                    'Authorization': localStorage.getItem("SESSION") || "",
-                                                }
+                                                },
+                                                credentials: "include"
                                             }).then(response => response.json()).then(
                                                 (data) => {
                                                     messageApi.destroy()
@@ -131,8 +131,8 @@ export default function Page() {
                                                 method: "POST",
                                                 headers: {
                                                     'Content-Type': 'application/json',
-                                                    'Authorization': localStorage.getItem("SESSION") || "",
-                                                }
+                                                },
+                                                credentials: "include"
                                             }).then(response => response.json()).then(
                                                 (data) => {
                                                     messageApi.destroy()
@@ -153,8 +153,8 @@ export default function Page() {
                                                 method: "POST",
                                                 headers: {
                                                     'Content-Type': 'application/json',
-                                                    'Authorization': localStorage.getItem("SESSION") || "",
-                                                }
+                                                },
+                                                credentials: "include"
                                             }).then(response => response.json()).then(
                                                 (data) => {
                                                     messageApi.destroy()

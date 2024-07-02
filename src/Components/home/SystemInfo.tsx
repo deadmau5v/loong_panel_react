@@ -26,8 +26,8 @@ export default function Plugin() {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': localStorage.getItem("SESSION") || "",
-            }
+            },
+            credentials: "include"
         });
         if (response.ok) {
             const data = await response.json();

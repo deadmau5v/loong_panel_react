@@ -2,7 +2,7 @@ import {ConfigContext} from "../config.tsx";
 import {useContext, useEffect, useState} from "react";
 import {ProCard} from "@ant-design/pro-components";
 import {Tabs} from "antd";
-import Log from "../plugins/Log.tsx";
+import Log from "../Components/log/Log.tsx";
 
 export default function Page() {
     const config = useContext(ConfigContext);
@@ -19,8 +19,8 @@ export default function Page() {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': localStorage.getItem("SESSION") || ""
-            }
+            },
+            credentials: "include"
         });
         const data: response = await res.json();
         if (data.status === 0) {
@@ -30,7 +30,7 @@ export default function Page() {
 
     useEffect(() => {
         GetLogs();
-    }, []);
+    }, [GetLogs]);
 
     const items = logs.map((log, index) => {
         return {

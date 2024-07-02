@@ -3,7 +3,6 @@ import {Button, Modal} from 'antd';
 import {ProForm, ProFormText} from '@ant-design/pro-form';
 import {ProCard} from '@ant-design/pro-components';
 import {ConfigContext} from '../config.tsx';
-import {useAuth} from '../plugins/AuthContext.tsx';
 import {Terminal} from '@xterm/xterm';
 import {FitAddon} from 'xterm-addon-fit';
 
@@ -14,13 +13,8 @@ export default function Page() {
         fontFamily: 'monospace',
     }));
     const [webSocket, setWebSocket] = useState<WebSocket | undefined>();
-    const {logined} = useAuth();
     const config = useContext(ConfigContext);
     const fitAddon = new FitAddon();
-
-    if (!logined) {
-        window.location.href = '/login';
-    }
 
     useEffect(() => {
         const terminalDiv = document.getElementById('terminal');

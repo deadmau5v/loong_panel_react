@@ -45,8 +45,8 @@ export default function Page() {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': localStorage.getItem("SESSION") || "",
-                }
+                },
+                credentials: "include"
             });
             const result = await response.json();
             if (result.code === 0) {
