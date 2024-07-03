@@ -70,7 +70,6 @@ export default function Component() {
                                 'Content-Type': 'application/json',
                             },
                             credentials: "include"
-
                         })
                         document.cookie = ""
                         localStorage.clear()

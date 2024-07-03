@@ -1,8 +1,10 @@
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
-import {Suspense, lazy} from 'react';
+import {Suspense, lazy, useEffect} from 'react';
 import {PageContainer, ProLayout} from '@ant-design/pro-components';
 import defaultProps from "./Components/aside/AsideProps.tsx";
 import logo from "./assets/logo.png";
+import {config} from "./config.tsx";
+import BackendOfflinePage from "./Views/NotRunning.tsx";
 
 const HomePage = lazy(() => import('./Views/HomePage'));
 const TerminalPage = lazy(() => import('./Views/TerminalPage'));
@@ -23,6 +25,29 @@ function App() {
     if (!localStorage.getItem("isLogin") && window.location.pathname != "/login") {
         window.location.href = "/login";
     }
+
+    // 检查后端启动
+    useEffect(() => {
+        if (window.location.pathname != "/not_run" && window.location.pathname != "/login") {
+            fetch(config.API_URL + "/api/v1/ping", {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: "include"
+            }).then((response) => {
+                if (response.status == 401) {
+                    localStorage.removeItem("isLogin");
+                    window.location.href = "/login";
+                }
+            }).catch(
+                () => {
+                    window.location.href = "/not_run";
+                }
+            )
+        }
+    }, [])
+
 
     return (
         <Router>
@@ -64,6 +89,7 @@ function App() {
                                 <Route path="/appstore" element={<AppStore/>}/>
                                 <Route path="/docker/container" element={<DockerContainer/>}/>
                                 <Route path="/docker/image" element={<DockerImage/>}/>
+                                <Route path="/not_run" element={<BackendOfflinePage/>}/>
                                 <Route path="*" element={<Error404Page/>}/>
                             </Routes>
                         </Suspense>

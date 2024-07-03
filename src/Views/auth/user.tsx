@@ -1,7 +1,7 @@
 import {ReactNode, useEffect, useState} from 'react';
 import {ProCard, ProColumns, ProTable} from '@ant-design/pro-components';
 import {Button, Popconfirm, message} from 'antd';
-import {config} from '../../config.tsx';
+import {config} from '../../config.tsx'
 
 
 interface User {
@@ -23,8 +23,12 @@ function Page() {
             credentials: "include"
         }).then(response => {
             if (response.ok) {
-                response.json().then(data => {
-                    setDatasource(data);
+                response.json().then((data: { data: never, status: number, msg: string }) => {
+                    if (data.status != 0) {
+                        MsgApi.error(data.msg);
+                    } else {
+                        setDatasource(data.data);
+                    }
                 });
             }
         });

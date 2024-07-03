@@ -1,11 +1,12 @@
 import {LoginForm, ProFormText} from '@ant-design/pro-components';
-import {Tabs} from "antd"
+import {message, Tabs} from "antd"
 import logo from "../../assets/logo.png"
 import {useState} from "react";
 import {config} from "../../config.tsx";
 
 export default function Plugin() {
     const [loginType, setLoginType] = useState('account');
+    const [MsgApi, contextHolder] = message.useMessage();
     const PasswordForm = <>
         <ProFormText.Password
             name="password"
@@ -54,6 +55,7 @@ export default function Plugin() {
     </>
 
     return <>
+        {contextHolder}
         <LoginForm
             logo={logo}
             title={"LoongPanel"}
@@ -65,12 +67,17 @@ export default function Plugin() {
                         'Content-Type': 'application/json'
                     },
                     credentials: 'include'
-                }).then((response) => {
-                    if (response.status === 200) {
-                        localStorage.setItem("isLogin", "true")
-                        window.location.href = "/"
+                }).then(r => r.json()).then(
+                    (data: { status: number, msg: string }) => {
+                        if (data.status != 0) {
+                            MsgApi.error(data.msg);
+                        } else {
+                            MsgApi.success("登录");
+                            localStorage.setItem("isLogin", "true")
+                            window.location.href = "/"
+                        }
                     }
-                })
+                );
             }}
         >
             <Tabs

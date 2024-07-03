@@ -136,8 +136,22 @@ function Page() {
 
     const handleDeletePolicy = (policy: Policy) => {
         if (selectedRole) {
-            // 删除策略
-            // Todo 实现删除策略的逻辑
+            fetch(config.API_URL + '/api/v1/auth/policy', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: "include",
+                body: JSON.stringify(policy)
+            }).then(r => r.json()).then(
+                (data: { status: number, msg: string }) => {
+                    if (data.status != 0) {
+                        MsgApi.error(data.msg);
+                    } else {
+                        MsgApi.success("删除策略成功");
+                    }
+                }
+            );
             setSelectedRole({
                 ...selectedRole,
                 policy_list: selectedRole.policy_list.filter(p => p.path !== policy.path)
@@ -145,13 +159,34 @@ function Page() {
         }
     };
 
-    const handleAddPolicy = (values: Policy) => {
+    const handleAddPolicy = (values: string[]) => {
         if (selectedRole) {
-            // 添加策略
-            // Todo 实现添加策略的逻辑
+            const p: Policy = {
+                method: values[0],
+                path: values[1],
+                role: selectedRole.name
+            }
+
+            fetch(config.API_URL + '/api/v1/auth/policy', {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: "include",
+                method: 'POST',
+                body: JSON.stringify(p)
+            }).then(r => r.json()).then(
+                (data: { status: number, msg: string }) => {
+                    if (data.status != 0) {
+                        MsgApi.error(data.msg);
+                    } else {
+                        MsgApi.success("添加策略成功");
+                    }
+                }
+            );
+
             setSelectedRole({
                 ...selectedRole,
-                policy_list: [...selectedRole.policy_list, values]
+                policy_list: [...selectedRole.policy_list, p]
             });
         }
     };
@@ -176,7 +211,7 @@ function Page() {
                         title={`策略详情 - ${selectedRole.name}`}
                         placement="right"
                         onClose={onClose}
-                        visible={visible}
+                        open={visible}
                         width={500}
                     >
                         <ProTable<Policy>
@@ -200,7 +235,6 @@ function Page() {
                             </ProFormFieldSet>
                             <Button htmlType="submit">添加策略</Button>
                         </ProForm>
-
                     </Drawer>
                 )}
             </ProCard>
