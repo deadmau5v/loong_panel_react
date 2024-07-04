@@ -36,7 +36,7 @@ export default function Log({name}: { name: string }) {
     useEffect(() => {
         // 获取日志
         GetLog()
-    }, [GetLog])
+    }, [])
 
 
     const clearLogs = async () => {

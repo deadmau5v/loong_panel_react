@@ -1,6 +1,6 @@
 import {ReactNode, useEffect, useState} from 'react';
 import {ProCard, ProColumns, ProTable} from '@ant-design/pro-components';
-import {Button, Popconfirm, message} from 'antd';
+import {Button, Popconfirm, message, Drawer} from 'antd';
 import {config} from '../../config.tsx'
 
 
@@ -8,11 +8,14 @@ interface User {
     id: number;
     name: string;
     mail: string;
+    role: string;
+    phone: string;
 }
 
 function Page() {
     const [MsgApi, contextHolder] = message.useMessage();
     const [datasource, setDatasource] = useState([]);
+    const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
     useEffect(() => {
         fetch(config.API_URL + '/api/v1/auth/users', {
@@ -32,7 +35,7 @@ function Page() {
                 });
             }
         });
-    }, []);
+    }, [MsgApi]);
 
     const handleDelete = (id: number) => {
         // Implement delete logic here, possibly calling an API and then updating the state
@@ -42,7 +45,6 @@ function Page() {
                 'Content-Type': 'application/json',
             },
             credentials: "include"
-
         }).then(
             async response => {
                 if (!response.ok) {
@@ -65,12 +67,11 @@ function Page() {
                 MsgApi.error(data.msg);
             }
         })
-
     };
 
     const handleEdit = (record: User) => {
         // You can set up a modal form for editing here
-        MsgApi.info(`正在编辑 ${record.name}`);
+        setSelectedUser(record);
     };
     const columns: ProColumns<User>[] = [
         {
@@ -87,6 +88,16 @@ function Page() {
             title: '邮箱',
             dataIndex: 'mail',
             key: 'mail',
+        },
+        {
+            title: '角色',
+            dataIndex: 'role',
+            key: 'role',
+        },
+        {
+            title: '电话',
+            dataIndex: 'phone',
+            key: 'phone',
         },
         {
             title: '操作',
@@ -128,7 +139,17 @@ function Page() {
                     search={false}
                 />
             </ProCard>
-
+            {
+                selectedUser && (
+                    <Drawer
+                        title={`编辑用户 - ${selectedUser.name}`}
+                        open={true}
+                        onClose={() => setSelectedUser(null)}
+                        width={500}
+                    >
+                    </Drawer>
+                )
+            }
         </>
     );
 }

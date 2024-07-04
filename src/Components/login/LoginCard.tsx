@@ -121,7 +121,7 @@ export default function Plugin() {
                         fieldProps={{
                             size: 'large',
                         }}
-                        placeholder={'邮箱: admin@qq.com / user@qq.com'}
+                        placeholder={'邮箱'}
                         rules={[
                             {
                                 required: true,

@@ -30,7 +30,7 @@ export default function Page() {
 
     useEffect(() => {
         GetLogs();
-    }, [GetLogs]);
+    }, []);
 
     const items = logs.map((log, index) => {
         return {

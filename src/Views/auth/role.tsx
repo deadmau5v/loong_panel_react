@@ -159,11 +159,12 @@ function Page() {
         }
     };
 
-    const handleAddPolicy = (values: string[]) => {
+    const handleAddPolicy = ({newPolicy}: { newPolicy: string[] }) => {
         if (selectedRole) {
+
             const p: Policy = {
-                method: values[0],
-                path: values[1],
+                method: newPolicy[0],
+                path: newPolicy[1],
                 role: selectedRole.name
             }
 

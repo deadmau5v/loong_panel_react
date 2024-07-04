@@ -49,7 +49,7 @@ export default function Page() {
                 credentials: "include"
             });
             const result = await response.json();
-            if (result.code === 0) {
+            if (result.status === 0) {
                 setImageData(result.data);
             }
         };
