@@ -19,7 +19,7 @@ const LogPage = lazy(() => import('./Views/LogPage.tsx'));
 const AppStore = lazy(() => import('./Views/AppStorePage.tsx'));
 const DockerContainer = lazy(() => import('./Views/docker/container.tsx'));
 const DockerImage = lazy(() => import('./Views/docker/image.tsx'));
-const Status = lazy(() => import('./Views/Status.tsx'));
+const Status = lazy(() => import('./Views/StatusPage.tsx'));
 
 /**
  * 应用组件
