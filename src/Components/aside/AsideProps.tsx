@@ -5,6 +5,9 @@ import {
     UserOutlined,
     ContactsOutlined,
     ContainerOutlined,
+    BarChartOutlined,
+    DockerOutlined,
+    AppstoreOutlined,
 } from '@ant-design/icons';
 
 export default {
@@ -14,27 +17,27 @@ export default {
             {
                 path: '/',
                 name: '首页',
-                icon: <HomeFilled/>,
+                icon: <HomeFilled />,
             },
             {
                 path: '/terminal',
                 name: '终端',
-                icon: <MergeFilled/>,
+                icon: <MergeFilled />,
             },
             {
                 path: '/files',
                 name: '文件',
-                icon: <FolderOpenFilled/>,
+                icon: <FolderOpenFilled />,
             },
             {
                 path: "/user",
                 name: "用户",
-                icon: <UserOutlined/>,
+                icon: <UserOutlined />,
             },
             {
                 path: "/auth",
                 name: "权限",
-                icon: <ContactsOutlined/>,
+                icon: <ContactsOutlined />,
                 //     二级菜单
                 routes: [
                     {
@@ -53,15 +56,15 @@ export default {
             }, {
                 path: "/log",
                 name: "日志",
-                icon: <ContainerOutlined/>,
+                icon: <ContainerOutlined />,
             }, {
                 path: "/appstore",
                 name: "应用",
-                icon: <ContainerOutlined/>,
+                icon: <AppstoreOutlined />,
             }, {
                 path: "/docker",
                 name: "Docker管理",
-                icon: <ContainerOutlined/>,
+                icon: <DockerOutlined />,
                 routes: [
                     {
                         path: "/docker/container",
@@ -72,6 +75,10 @@ export default {
                         name: "镜像",
                     },
                 ]
+            }, {
+                path: "/status",
+                name: "状态",
+                icon: <BarChartOutlined />,
             }
         ],
     },

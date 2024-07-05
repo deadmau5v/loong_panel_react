@@ -19,6 +19,7 @@ const LogPage = lazy(() => import('./Views/LogPage.tsx'));
 const AppStore = lazy(() => import('./Views/AppStorePage.tsx'));
 const DockerContainer = lazy(() => import('./Views/docker/container.tsx'));
 const DockerImage = lazy(() => import('./Views/docker/image.tsx'));
+const Status = lazy(() => import('./Views/Status.tsx'));
 
 /**
  * 应用组件
@@ -41,15 +42,15 @@ function App() {
                 },
                 credentials: "include"
             })
-            .then((response) => {
-                if (response.status === 401) {
-                    localStorage.removeItem("isLogin");
-                    window.location.href = "/login";
-                }
-            })
-            .catch(() => {
-                window.location.href = "/not_run";
-            });
+                .then((response) => {
+                    if (response.status === 401) {
+                        localStorage.removeItem("isLogin");
+                        window.location.href = "/login";
+                    }
+                })
+                .catch(() => {
+                    window.location.href = "/not_run";
+                });
         }
     }, []);
 
@@ -91,6 +92,7 @@ function App() {
                                 <Route path="/docker/container" element={<DockerContainer />} />
                                 <Route path="/docker/image" element={<DockerImage />} />
                                 <Route path="/not_run" element={<BackendOfflinePage />} />
+                                <Route path="/status" element={<Status />} />
                                 <Route path="*" element={<Error404Page />} />
                             </Routes>
                         </Suspense>
