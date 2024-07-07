@@ -8,6 +8,7 @@ import {
     BarChartOutlined,
     DockerOutlined,
     AppstoreOutlined,
+    CodeSandboxOutlined,
 } from '@ant-design/icons';
 
 export default {
@@ -79,6 +80,10 @@ export default {
                 path: "/status",
                 name: "状态",
                 icon: <BarChartOutlined />,
+            }, {
+                path: "/clamav",
+                name: "Clamav",
+                icon: <CodeSandboxOutlined />,
             }
         ],
     },

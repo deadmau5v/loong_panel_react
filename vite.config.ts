@@ -16,7 +16,7 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          'react-dom': ['react', 'react-dom', 'lodash'], // 将'react-dom'单独打包成一个代码块
+          'react-dom': ['react', 'react-dom', 'lodash'],
         },
       },
     },
