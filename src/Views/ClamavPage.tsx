@@ -1,7 +1,9 @@
 import { useState } from "react";
-import { Descriptions, message, Button, Layout, Col, Row } from "antd";
+import { Descriptions, message, Button, Layout, Col, Row, Select, Table } from "antd";
 import { config } from "../config";
 const { Content } = Layout;
+import { ScanOutlined, DashboardOutlined } from "@ant-design/icons";
+import { ProCard } from "@ant-design/pro-components";
 
 type ScanReport = {
     data_read: string;
@@ -27,29 +29,39 @@ export default function Page() {
         let api = config.API_URL + "/api/v1/clamav/scan?path=" + encodeURIComponent(path) + "&type=" + type;
         if (ws) {
             if (config.WS_URL) {
-
                 api = config.WS_URL + "/api/ws/clamav/scan?type=" + type + "&path=" + encodeURIComponent(path);
-
             } else {
-
                 api = "ws://" + window.location.host + "/api/ws/clamav/scan?type=" + type + "&path=" + encodeURIComponent(path);
-
             }
         }
         if (ws) {
-            console.log(api);
             try {
                 const ws = new WebSocket(api);
                 ws.onmessage = (event) => {
                     let strData = event.data.toString();
-                    strData = strData.trim();
-                    strData = strData.replace(" ","").replace("\t", "")
-                    if (strData.includes("\n")) {
-                        const newLogs = strData.split("\n");
-                        setScanLog(prevLogs => [...prevLogs, ...newLogs]);
-                    } else {
-                        setScanLog(prevLogs => [...prevLogs, strData]);
+                    // 如果是json 就解析出来
+                    try {
+                        const jsonData = JSON.parse(strData);
+                        if (jsonData.status === 0 && jsonData.data) {
+                            setScanReport(jsonData.data);
+                            setScanLog(prevLogs => [...prevLogs, "扫描完成: OK"]);
+                        } else {
+                            setScanLog(prevLogs => [...prevLogs, "信息: " + jsonData.msg]);
+                        }
+                    } catch (e) {
+                        strData = strData.trim();
+                        strData = strData.replace(" ", "").replace("\t", "")
+
+                        // 否则就是过程日志
+                        if (strData.includes("\n")) {
+                            const newLogs = strData.split("\n");
+                            setScanLog(prevLogs => [...prevLogs, ...newLogs]);
+                        } else {
+                            setScanLog(prevLogs => [...prevLogs, strData]);
+                        }
                     }
+
+
                 };
             } catch (error) {
                 setScanning(false)
@@ -77,32 +89,58 @@ export default function Page() {
     };
 
     return (
-        <>
+        <ProCard>
             <Row>
-                <Col>
-                    <Row><Button onClick={() => handleScanStart("full", "/", true)}>全盘扫描</Button></Row>
-                    <Row><Button onClick={() => handleScanStart("fast", "/", true)}>快速扫描</Button></Row>
-                </Col>
-                <Col>
+                <ProCard>
+                    <Col>
+                        <Row gutter={16} style={{ margin: 20 }}>
+                            <Col span={12}>
+                                <Button type="primary" size="large" block onClick={() => handleScanStart("full", "/", true)} icon={<ScanOutlined />}>
+                                    全盘扫描
+                                </Button>
+                            </Col>
+                            <Col span={12}>
+                                <Button type="default" size="large" block onClick={() => handleScanStart("fast", "/", true)} icon={<DashboardOutlined />}>
+                                    快速扫描
+                                </Button>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col span={24} style={{ display: 'flex', justifyContent: 'center' }}>
+                                <div>
+                                    <Select defaultValue="none" style={{ width: 300, marginBottom: 10 }} onChange={(value) => console.log(value)}>
+                                        <Select.Option value="none">不设置定时</Select.Option>
+                                        <Select.Option value="daily">每天</Select.Option>
+                                        <Select.Option value="weekly">每周</Select.Option>
+                                        <Select.Option value="monthly">每月</Select.Option>
+                                    </Select>
+                                </div>
+                            </Col>
+                        </Row>
+                    </Col>
+                </ProCard>
+
+                <Col style={{ width: "100%" }}>
                     <Layout style={{ padding: '0 24px 24px' }}>
                         <Content
                             style={{
                                 padding: 24,
                                 margin: 0,
                                 minHeight: 280,
+
                             }}
                         >
                             {
                                 scanning ? (
                                     <>
-                                        <ul style={{ height: '200px'}}>
-                                            {scanLog.slice(scanLog.length - 20, scanLog.length).map((log, index) => (
-                                                <li key={index}>
-                                                        <span style={{ color: "green" }}>检测结果:</span> OK
-                                                        <span style={{paddingLeft: '10px', color: "green"}}>文件:</span> {log.split(":")[0].length > 100? log.split(":")[0].slice(0, 20) + "..." : log.split(":")[0]}
-                                                </li>
-                                            ))}
-                                        </ul>
+                                        <Table dataSource={scanLog.slice(scanLog.length - 20, scanLog.length).map((log, index) => ({ key: index, file: log.split(":")[0], result: log.split(":")[1] || "无结果" }))} pagination={false}>
+                                            <Table.Column title="文件" dataIndex="file" key="file" render={(text) => (
+                                                <span>{text && text.trim().length > 100 ? text.slice(0, 20) + "..." : text}</span>
+                                            )} />
+                                            <Table.Column title="检测结果" dataIndex="result" key="result" render={(text) => (
+                                                <span>{text.trim()}</span>
+                                            )} />
+                                        </Table>
                                     </>
 
                                 ) : scanReport ? (
@@ -125,6 +163,6 @@ export default function Page() {
                     </Layout>
                 </Col>
             </Row>
-        </>
+        </ProCard>
     );
 }

@@ -1,7 +1,7 @@
 import {Descriptions, Progress} from "antd";
 import {SystemStatus} from "./Charts.tsx"
 
-const memoryUnits = ["B", "KB", "MB", "GB"];
+const memoryUnits = ["B", "KB", "MB", "GB", "TB"];
 
 // 转换内存单位
 function ChangeMemory(n: number, showUnit: boolean = true) {

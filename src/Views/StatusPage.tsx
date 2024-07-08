@@ -19,7 +19,14 @@ export default function Status() {
     const [displayRange, setDisplayRange] = useState<number>(100);
 
     useEffect(() => {
-        const ws = new WebSocket(config.WS_URL + "/api/ws/status");
+        let api
+        if (config.WS_URL) {
+            api = config.WS_URL + "/api/ws/status"
+        } else {
+            api = "ws://" + window.location.host + "/api/ws/status";
+        }
+
+        const ws = new WebSocket(api);
         ws.onopen = () => {
             console.log("连接成功");
         };

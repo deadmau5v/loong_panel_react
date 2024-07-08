@@ -114,14 +114,14 @@ export default function Page() {
 
                                 <Button onClick={() => {
                                     {
-                                        /*Todo 实现功能*/
+                                        // Todo Docker 镜像启动
                                     }
                                     setShowDetail(true)
                                     setSelectedImage(image)
                                 }}>启动</Button>
                                 <Button danger onClick={() => {
                                     {
-                                        /*Todo 实现功能*/
+                                        // Todo 实现 Docker 镜像删除
                                     }
                                 }}>删除</Button>
                             </Group>
