@@ -88,6 +88,23 @@ export default function Page() {
         }
     };
 
+    const setScanTime = (value: string) => {
+        fetch(config.API_URL + "/api/v1/clamav/set_scan_time?time=" + value, {
+            headers: {
+                "Content-Type": "application/json",
+            },
+            credentials: "include",
+        }).then((res) => {
+            return res.json();
+        }).then((data) => {
+            if (data.status !== 0) {
+                message.error(data.msg);
+            } else {
+                message.success(data.msg);
+            }
+        });
+    }
+
     return (
         <ProCard>
             <Row>
@@ -108,11 +125,11 @@ export default function Page() {
                         <Row>
                             <Col span={24} style={{ display: 'flex', justifyContent: 'center' }}>
                                 <div>
-                                    <Select defaultValue="none" style={{ width: 300, marginBottom: 10 }} onChange={(value) => console.log(value)}>
-                                        <Select.Option value="none">不设置定时</Select.Option>
-                                        <Select.Option value="daily">每天</Select.Option>
-                                        <Select.Option value="weekly">每周</Select.Option>
-                                        <Select.Option value="monthly">每月</Select.Option>
+                                    <Select defaultValue="none" style={{ width: 300, marginBottom: 10 }} onChange={setScanTime}>
+                                        <Select.Option value="0">不设置定时</Select.Option>
+                                        <Select.Option value="day">每天</Select.Option>
+                                        <Select.Option value="week">每周</Select.Option>
+                                        <Select.Option value="month">每月</Select.Option>
                                     </Select>
                                 </div>
                             </Col>
@@ -133,7 +150,7 @@ export default function Page() {
                             {
                                 scanning ? (
                                     <>
-                                        <Table dataSource={scanLog.slice(scanLog.length - 20, scanLog.length).map((log, index) => ({ key: index, file: log.split(":")[0], result: log.split(":")[1] || "无结果" }))} pagination={false}>
+                                        <Table dataSource={scanLog.map((log, index) => ({ key: index, file: log.split(":")[0], result: log.split(":")[1] || "无结果" }))} pagination={false}>
                                             <Table.Column title="文件" dataIndex="file" key="file" render={(text) => (
                                                 <span>{text && text.trim().length > 100 ? text.slice(0, 20) + "..." : text}</span>
                                             )} />

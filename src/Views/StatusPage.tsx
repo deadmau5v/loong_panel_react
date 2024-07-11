@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { config } from "../config";
 import { ProCard } from "@ant-design/pro-components";
-import { Slider } from "antd";
+import { Slider, InputNumber, Select, Card, Col, Form, Row, Button, message, Input } from "antd";
 import ReactEcharts from 'echarts-for-react';
 
 function getColorByIndex(index: number): string {
@@ -108,9 +108,9 @@ export default function Status() {
         })),
     });
 
+
     return (
-        <ProCard>
-            <h1>状态</h1>
+        <ProCard title="持久化状态">
             <Slider
                 min={10}
                 max={cpuData.length}
@@ -120,12 +120,79 @@ export default function Status() {
                     marginBottom: 20,
                 }}
             />
-            <ReactEcharts option={createChartConfig(cpuData)} />
-            <ReactEcharts option={createChartConfig(diskData)} />
-            <ReactEcharts option={createChartConfig(loadData)} />
-            <ReactEcharts option={createChartConfig(networkData)} />
-            <ReactEcharts option={createChartConfig(networkPkgData)} />
-            <ReactEcharts option={createChartConfig(ramData)} />
+            <Card title="设置状态持久化记录时间">
+                <Form onFinish={(values) => {
+                    if (values.saveTimeValue === undefined) {
+                        values.saveTimeValue = 5
+                    }
+                    if (values.stepTimeValue === undefined) {
+                        values.stepTimeValue = 5
+                    }
+                    console.log(values)
+
+                    fetch(config.API_URL + "/api/v1/status/config", {
+                        method: "POST",
+                        body: JSON.stringify(values),
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        credentials: "include",
+                    }).then(res => {
+                        return res.json()
+                    }).then((res: { status: number, msg: string }) => {
+                        if (res.status != 0) {
+                            message.error(res.msg);
+                        } else {
+                            message.success(res.msg);
+                        }
+                    })
+                }}>
+                    <Row gutter={24}>
+                        <Col span={12}>
+                            <Form.Item label="设置状态记录间隔时间:" style={{ marginBottom: 16 }}>
+                                <Input.Group compact>
+                                    <Form.Item name="stepTimeValue" noStyle>
+                                        <InputNumber min={1} defaultValue={5} style={{ width: '70%' }} />
+                                    </Form.Item>
+                                    <Form.Item name="stepTimeUnit" initialValue="second" noStyle>
+                                        <Select style={{ width: '30%' }}>
+                                            <Select.Option value="second">秒</Select.Option>
+                                            <Select.Option value="minute">分钟</Select.Option>
+                                        </Select>
+                                    </Form.Item>
+                                </Input.Group>
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item label="设置状态最长保存时间:" style={{ marginBottom: 16 }}>
+                                <Input.Group compact>
+                                    <Form.Item name="saveTimeValue" noStyle>
+                                        <InputNumber min={1} defaultValue={5} style={{ width: '70%' }} />
+                                    </Form.Item>
+                                    <Form.Item name="saveTimeUnit" initialValue="minute" noStyle>
+                                        <Select style={{ width: '30%' }}>
+                                            <Select.Option value="second">秒</Select.Option>
+                                            <Select.Option value="minute">分钟</Select.Option>
+                                            <Select.Option value="hour">小时</Select.Option>
+                                        </Select>
+                                    </Form.Item>
+                                </Input.Group>
+                            </Form.Item>
+                        </Col>
+                    </Row>
+                    <Form.Item>
+                        <Button type="primary" htmlType="submit">提交</Button>
+                    </Form.Item>
+                </Form>
+            </Card>
+            <Card style={{ marginTop: '10px' }}>
+                <Card title="CPU占用"><ReactEcharts option={createChartConfig(cpuData)} /></Card>
+                <Card title="磁盘IO"><ReactEcharts option={createChartConfig(diskData)} /></Card>
+                <Card title="平均负载"><ReactEcharts option={createChartConfig(loadData)} /></Card>
+                <Card title="网络IO"><ReactEcharts option={createChartConfig(networkData)} /></Card>
+                <Card title="网络包"><ReactEcharts option={createChartConfig(networkPkgData)} /></Card>
+                <Card title="内存占用"><ReactEcharts option={createChartConfig(ramData)} /></Card>
+            </Card>
         </ProCard>
     );
 }
