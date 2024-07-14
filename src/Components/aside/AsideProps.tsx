@@ -84,6 +84,11 @@ export default {
                 path: "/clamav",
                 name: "Clamav",
                 icon: <CodeSandboxOutlined />,
+            },
+            {
+                path: "/inspection",
+                name: "巡检",
+                icon: <CodeSandboxOutlined />,
             }
         ],
     },

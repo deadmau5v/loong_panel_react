@@ -21,6 +21,8 @@ const DockerContainer = lazy(() => import('./Views/docker/container.tsx'));
 const DockerImage = lazy(() => import('./Views/docker/image.tsx'));
 const Status = lazy(() => import('./Views/StatusPage.tsx'));
 const ClamavPage = lazy(() => import('./Views/ClamavPage.tsx'));
+const InspectionPage = lazy(() => import('./Views/InspectionPage.tsx'));
+
 
 /**
  * 应用组件
@@ -95,6 +97,7 @@ function App() {
                                 <Route path="/not_run" element={<BackendOfflinePage />} />
                                 <Route path="/status" element={<Status />} />
                                 <Route path="/clamav" element={<ClamavPage />} />
+                                <Route path="/inspection" element={<InspectionPage />} />
                                 <Route path="*" element={<Error404Page />} />
                             </Routes>
                         </Suspense>
