@@ -1,8 +1,8 @@
-import React, {useContext, useEffect, useState, lazy, Suspense} from "react";
-import {config, ConfigContext} from "../config.tsx";
-import {FolderOutlined, FileOutlined} from '@ant-design/icons';
-import {Button, Drawer, Flex, Input} from 'antd';
-import {Prism as SyntaxHighlighter} from 'react-syntax-highlighter';
+import React, { useContext, useEffect, useState, lazy, Suspense } from "react";
+import { config, ConfigContext } from "../config.tsx";
+import { FolderOutlined, FileOutlined } from '@ant-design/icons';
+import { Button, Drawer, Flex, Input, Card } from 'antd';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 
 const FileComponent = lazy(() => import('../Components/file/File.tsx'));
 
@@ -119,7 +119,7 @@ export default function Page() {
             dataIndex: 'icon',
             key: 'icon',
             render: (_dom: React.ReactNode, record: File) => (
-                record.isDir ? <FolderOutlined/> : <FileOutlined/>
+                record.isDir ? <FolderOutlined /> : <FileOutlined />
             ),
         },
         {
@@ -233,43 +233,45 @@ export default function Page() {
 
     return (
         <>
-            <Suspense fallback={<div>Loading...</div>}>
-                <Flex>
-                    <Button onClick={() => {
-                        if (path === "/") {
-                            return
-                        }
-                        const paths = path.split("/")
-                        paths.pop()
-                        setDirFiles(paths.join("/"), setDataSource, API, setPath)
-                    }}>上一级
-                    </Button>
-                    <Input value={path} onChange={() => {
-                    }}/>
-                </Flex>
+            <Card>
+                <Suspense fallback={<div>Loading...</div>}>
+                    <Flex>
+                        <Button onClick={() => {
+                            if (path === "/") {
+                                return
+                            }
+                            const paths = path.split("/")
+                            paths.pop()
+                            setDirFiles(paths.join("/"), setDataSource, API, setPath)
+                        }}>上一级
+                        </Button>
+                        <Input value={path} onChange={() => {
+                        }} />
+                    </Flex>
 
-                <FileComponent columns={columns} dataSource={dataSource}/>
+                    <FileComponent columns={columns} dataSource={dataSource} />
 
-                <Drawer
-                    title="文件详情"
-                    placement="right"
-                    onClose={() => setDrawerVisible(false)}
-                    open={drawerVisible}
-                    width={1200}
-                >
-                    {selectedFile && (
-                        <div>
-                            <p><strong>文件名:</strong> {selectedFile.name}</p>
-                            <p>内容:</p>
-                            <SyntaxHighlighter
-                                language={languageMap[selectedFile.ext] || 'text'}
-                            >
-                                {selectedFile.content}
-                            </SyntaxHighlighter>
-                        </div>
-                    )}
-                </Drawer>
-            </Suspense>
+                    <Drawer
+                        title="文件详情"
+                        placement="right"
+                        onClose={() => setDrawerVisible(false)}
+                        open={drawerVisible}
+                        width={1200}
+                    >
+                        {selectedFile && (
+                            <div>
+                                <p><strong>文件名:</strong> {selectedFile.name}</p>
+                                <p>内容:</p>
+                                <SyntaxHighlighter
+                                    language={languageMap[selectedFile.ext] || 'text'}
+                                >
+                                    {selectedFile.content}
+                                </SyntaxHighlighter>
+                            </div>
+                        )}
+                    </Drawer>
+                </Suspense>
+            </Card>
         </>
     )
 }

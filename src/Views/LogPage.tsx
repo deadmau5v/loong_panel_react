@@ -1,7 +1,7 @@
-import {ConfigContext} from "../config.tsx";
-import {useContext, useEffect, useState} from "react";
-import {ProCard} from "@ant-design/pro-components";
-import {Tabs} from "antd";
+import { ConfigContext } from "../config.tsx";
+import { useContext, useEffect, useState } from "react";
+import { ProCard } from "@ant-design/pro-components";
+import { Tabs, Card } from "antd";
 import Log from "../Components/log/Log.tsx";
 
 export default function Page() {
@@ -36,17 +36,19 @@ export default function Page() {
         return {
             label: log,
             key: index.toString(),
-            children: <Log name={log}/>
+            children: <Log name={log} />
         }
     })
 
     return (
         <>
-            <ProCard>
-                <Tabs
-                    items={items}>
-                </Tabs>
-            </ProCard>
+            <Card>
+                <ProCard>
+                    <Tabs
+                        items={items}>
+                    </Tabs>
+                </ProCard>
+            </Card>
         </>
     );
 }

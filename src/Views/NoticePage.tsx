@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { config } from "../config"
-import { message, Button, Drawer, InputNumber } from 'antd';
+import { message, Button, Drawer, InputNumber, Card } from 'antd';
 import { ProTable, ProForm, ProFormSelect, ProFormSwitch, ProFormText } from '@ant-design/pro-components';
 
 type UserNotificationSetting = {
@@ -30,7 +30,9 @@ export default function Page() {
 
     // 获取用户通知设置
     const getSettings = () => {
-        fetch(config.API_URL + "/api/v1/notice/notices").then(res => res.json()).then(data => {
+        fetch(config.API_URL + "/api/v1/notice/notices", {
+            credentials: "include",
+        }).then(res => res.json()).then(data => {
             if (data.status != 0) {
                 message.error(data.msg);
             } else {
@@ -41,7 +43,9 @@ export default function Page() {
     }
 
     const getAllUsers = () => {
-        fetch(config.API_URL + "/api/v1/auth/users").then(res => res.json()).then(data => {
+        fetch(config.API_URL + "/api/v1/auth/users", {
+            credentials: "include",
+        }).then(res => res.json()).then(data => {
             if (data.status != 0) {
                 message.error(data.msg);
             } else {
@@ -54,6 +58,7 @@ export default function Page() {
     const addNotice = ({ userID }: { userID: number }) => {
         fetch(config.API_URL + "/api/v1/notice/notice?userID=" + userID, {
             method: "POST",
+            credentials: "include",
         }).then(res => res.json()).then(data => {
             if (data.status != 0) {
                 message.error(data.msg);
@@ -68,6 +73,7 @@ export default function Page() {
         fetch(config.API_URL + "/api/v1/notice/notice", {
             method: "DELETE",
             body: JSON.stringify(setting),
+            credentials: "include",
         }).then(res => res.json()).then(data => {
             if (data.status != 0) {
                 message.error(data.msg);
@@ -82,6 +88,7 @@ export default function Page() {
         fetch(config.API_URL + "/api/v1/notice/notice", {
             method: "PUT",
             body: JSON.stringify(values),
+            credentials: "include",
         }).then(res => res.json()).then(data => {
             if (data.status != 0) {
                 message.error(data.msg);
@@ -98,7 +105,7 @@ export default function Page() {
     }, []);
 
     return (
-        <>
+        <Card>
             <ProTable<UserNotificationSetting>
                 columns={[
                     {
@@ -274,19 +281,19 @@ export default function Page() {
                                 label="CPU警告值"
                                 rules={[{ required: true, message: '请输入CPU警告值' }]}
                             >
-                                <InputNumber min={1} max={100} placeholder="请输入CPU警告值（%）" />
+                                <InputNumber min={1} max={100} placeholder="请输入CPU警告值(%)" />
                             </ProForm.Item>
                             <ProForm.Item
                                 name="max_ram"
                                 label="内存警告值"
                                 rules={[{ required: true, message: '请输入内存警告值' }]}
                             >
-                                <InputNumber min={1} max={100} placeholder="请输入内存警告值（%）" />
+                                <InputNumber min={1} max={100} placeholder="请输入内存警告值(%)" />
                             </ProForm.Item>
                         </ProForm>
                     </Drawer>
                 )
             }
-        </>
+        </Card>
     )
 }

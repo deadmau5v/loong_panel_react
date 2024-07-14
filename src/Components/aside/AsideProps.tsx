@@ -11,6 +11,7 @@ import {
     CodeSandboxOutlined,
     BellOutlined,
     SafetyOutlined,
+    SettingOutlined,
 } from '@ant-design/icons';
 
 export default {
@@ -19,51 +20,51 @@ export default {
         routes: [
             {
                 path: '/',
-                name: '面板首页',
+                name: '首页',
                 icon: <HomeFilled />,
             },
             {
                 path: '/terminal',
-                name: '网页终端',
+                name: '终端',
                 icon: <MergeFilled />,
             },
             {
                 path: '/files',
-                name: '文件管理',
+                name: '文件',
                 icon: <FolderOpenFilled />,
             },
             {
                 path: "/user",
-                name: "用户后台",
+                name: "我的",
                 icon: <UserOutlined />,
             },
             {
                 path: "/log",
-                name: "日志中心",
+                name: "日志",
                 icon: <ContainerOutlined />,
             },
             {
                 path: "/appstore",
-                name: "应用市场",
+                name: "应用",
                 icon: <AppstoreOutlined />,
             },
             {
                 path: "/status",
-                name: "状态监控",
+                name: "状态",
                 icon: <BarChartOutlined />,
             },
             {
                 path: "/auth",
-                name: "权限管理",
+                name: "权限",
                 icon: <ContactsOutlined />,
                 routes: [
                     {
                         path: "/auth/user",
-                        name: "用户管理",
+                        name: "用户",
                     },
                     {
                         path: "/auth/role",
-                        name: "角色管理",
+                        name: "角色",
                     },
                 ]
             },
@@ -96,6 +97,11 @@ export default {
                 path: "/notice",
                 name: "预警通知",
                 icon: <BellOutlined />,
+            },
+            {
+                path: "/settings",
+                name: "面板设置",
+                icon: <SettingOutlined />,
             }
         ],
     },

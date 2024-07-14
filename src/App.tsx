@@ -23,6 +23,7 @@ const Status = lazy(() => import('./Views/StatusPage.tsx'));
 const ClamavPage = lazy(() => import('./Views/ClamavPage.tsx'));
 const InspectionPage = lazy(() => import('./Views/InspectionPage.tsx'));
 const NoticePage = lazy(() => import('./Views/NoticePage.tsx'));
+const SettingsPage = lazy(() => import('./Views/SettingsPage.tsx'));
 
 /**
  * 应用组件
@@ -98,6 +99,7 @@ function App() {
                                 <Route path="/clamav" element={<ClamavPage />} />
                                 <Route path="/inspection" element={<InspectionPage />} />
                                 <Route path="/notice" element={<NoticePage />} />
+                                <Route path="/settings" element={<SettingsPage />} />
                                 <Route path="*" element={<Error404Page />} />
                             </Routes>
                         </Suspense>

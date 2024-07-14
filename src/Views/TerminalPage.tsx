@@ -1,10 +1,10 @@
-import {useState, useContext, useEffect} from 'react';
-import {Button, Modal} from 'antd';
-import {ProForm, ProFormText} from '@ant-design/pro-form';
-import {ProCard} from '@ant-design/pro-components';
-import {ConfigContext} from '../config.tsx';
-import {Terminal} from '@xterm/xterm';
-import {FitAddon} from 'xterm-addon-fit';
+import { useState, useContext, useEffect } from 'react';
+import { Button, Modal, Card } from 'antd';
+import { ProForm, ProFormText } from '@ant-design/pro-form';
+import { ProCard } from '@ant-design/pro-components';
+import { ConfigContext } from '../config.tsx';
+import { Terminal } from '@xterm/xterm';
+import { FitAddon } from 'xterm-addon-fit';
 
 export default function Page() {
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -33,7 +33,7 @@ export default function Page() {
 
     const handleOk = (values: { host: string, port: string, user: string, pwd: string }) => {
         setIsModalVisible(false);
-        const {host, port, user, pwd} = values;
+        const { host, port, user, pwd } = values;
         webSocket?.close();
         term.clear();
         term.writeln(`🔄   正在连接到窗口 [${user}@${host}:${port}] ...`);
@@ -54,21 +54,23 @@ export default function Page() {
 
     return (
         <>
-            <Button type="primary" onClick={showModal} style={{margin: 10}}>
-                连接 SSH
-            </Button>
-            <Modal title="输入 SSH 服务器信息" open={isModalVisible} onCancel={handleCancel} footer={null}>
-                <ProForm onFinish={handleOk}>
-                    <ProFormText name="host" label="Host" initialValue="127.0.0.1"/>
-                    <ProFormText name="port" label="Port" initialValue="22"/>
-                    <ProFormText name="user" label="User" initialValue="root"/>
-                    <ProFormText name="pwd" label="Password" fieldProps={{type: 'password'}}/>
-                </ProForm>
-            </Modal>
-            <ProCard id="TerminalCard">
-                <link rel="stylesheet" href="https://cdn1.d5v.cc/CDN/Project/LoongPanel/static/xterm.css"/>
-                <div id="terminal" style={{height: '700px', width: '100%'}}/>
-            </ProCard>
+            <Card>
+                <Button type="primary" onClick={showModal} style={{ margin: 10 }}>
+                    连接 SSH
+                </Button>
+                <Modal title="输入 SSH 服务器信息" open={isModalVisible} onCancel={handleCancel} footer={null}>
+                    <ProForm onFinish={handleOk}>
+                        <ProFormText name="host" label="Host" initialValue="127.0.0.1" />
+                        <ProFormText name="port" label="Port" initialValue="22" />
+                        <ProFormText name="user" label="User" initialValue="root" />
+                        <ProFormText name="pwd" label="Password" fieldProps={{ type: 'password' }} />
+                    </ProForm>
+                </Modal>
+                <ProCard id="TerminalCard">
+                    <link rel="stylesheet" href="https://cdn1.d5v.cc/CDN/Project/LoongPanel/static/xterm.css" />
+                    <div id="terminal" style={{ height: '700px', width: '100%' }} />
+                </ProCard>
+            </Card>
         </>
     );
 }

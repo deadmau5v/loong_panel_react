@@ -4,7 +4,7 @@ import { config } from "../config.tsx";
 import { ProCard } from "@ant-design/pro-components";
 
 const { Header, Content } = Layout;
-const { Title, Text } = Typography;
+const { Text } = Typography;
 
 export interface Request {
     msg: string;
@@ -96,7 +96,6 @@ export default function Component() {
                     backgroundColor: 'transparent',
                     padding: '0 0 24px 0'
                 }}>
-                    <Title level={2}>用户后台</Title>
                     <Button onClick={handleLogout}>退出</Button>
                 </Header>
 
