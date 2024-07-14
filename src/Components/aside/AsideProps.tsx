@@ -9,6 +9,8 @@ import {
     DockerOutlined,
     AppstoreOutlined,
     CodeSandboxOutlined,
+    BellOutlined,
+    SafetyOutlined,
 } from '@ant-design/icons';
 
 export default {
@@ -17,34 +19,44 @@ export default {
         routes: [
             {
                 path: '/',
-                name: '首页',
+                name: '面板首页',
                 icon: <HomeFilled />,
             },
             {
                 path: '/terminal',
-                name: '终端',
+                name: '网页终端',
                 icon: <MergeFilled />,
             },
             {
                 path: '/files',
-                name: '文件',
+                name: '文件管理',
                 icon: <FolderOpenFilled />,
             },
             {
                 path: "/user",
-                name: "用户",
+                name: "用户后台",
                 icon: <UserOutlined />,
             },
             {
+                path: "/log",
+                name: "日志中心",
+                icon: <ContainerOutlined />,
+            },
+            {
+                path: "/appstore",
+                name: "应用市场",
+                icon: <AppstoreOutlined />,
+            },
+            {
+                path: "/status",
+                name: "状态监控",
+                icon: <BarChartOutlined />,
+            },
+            {
                 path: "/auth",
-                name: "权限",
+                name: "权限管理",
                 icon: <ContactsOutlined />,
-                //     二级菜单
                 routes: [
-                    {
-                        path: "/auth/global",
-                        name: "全局设置",
-                    },
                     {
                         path: "/auth/user",
                         name: "用户管理",
@@ -54,33 +66,23 @@ export default {
                         name: "角色管理",
                     },
                 ]
-            }, {
-                path: "/log",
-                name: "日志",
-                icon: <ContainerOutlined />,
-            }, {
-                path: "/appstore",
-                name: "应用",
-                icon: <AppstoreOutlined />,
-            }, {
+            },
+            {
                 path: "/docker",
                 name: "Docker管理",
                 icon: <DockerOutlined />,
                 routes: [
                     {
                         path: "/docker/container",
-                        name: "容器",
+                        name: "容器管理",
                     },
                     {
                         path: "/docker/image",
-                        name: "镜像",
+                        name: "镜像管理",
                     },
                 ]
-            }, {
-                path: "/status",
-                name: "状态",
-                icon: <BarChartOutlined />,
-            }, {
+            },
+            {
                 path: "/clamav",
                 name: "病毒扫描",
                 icon: <CodeSandboxOutlined />,
@@ -88,7 +90,12 @@ export default {
             {
                 path: "/inspection",
                 name: "一键巡检",
-                icon: <CodeSandboxOutlined />,
+                icon: <SafetyOutlined />,
+            },
+            {
+                path: "/notice",
+                name: "预警通知",
+                icon: <BellOutlined />,
             }
         ],
     },

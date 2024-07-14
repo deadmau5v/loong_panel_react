@@ -15,7 +15,6 @@ const Error404Page = lazy(() => import('./Views/Error404Page'));
 const LoginPage = lazy(() => import('./Views/LoginPage'));
 const AuthRole = lazy(() => import('./Views/auth/role.tsx'));
 const AuthUser = lazy(() => import('./Views/auth/user.tsx'));
-const AuthGlobal = lazy(() => import('./Views/auth/global.tsx'));
 const LogPage = lazy(() => import('./Views/LogPage.tsx'));
 const AppStore = lazy(() => import('./Views/AppStorePage.tsx'));
 const DockerContainer = lazy(() => import('./Views/docker/container.tsx'));
@@ -23,6 +22,7 @@ const DockerImage = lazy(() => import('./Views/docker/image.tsx'));
 const Status = lazy(() => import('./Views/StatusPage.tsx'));
 const ClamavPage = lazy(() => import('./Views/ClamavPage.tsx'));
 const InspectionPage = lazy(() => import('./Views/InspectionPage.tsx'));
+const NoticePage = lazy(() => import('./Views/NoticePage.tsx'));
 
 /**
  * 应用组件
@@ -87,7 +87,6 @@ function App() {
                                 <Route path="/terminal" element={<TerminalPage />} />
                                 <Route path="/login" element={<LoginPage />} />
                                 <Route path="/user" element={<UserPage />} />
-                                <Route path="/auth/global" element={<AuthGlobal />} />
                                 <Route path="/auth/user" element={<AuthUser />} />
                                 <Route path="/auth/role" element={<AuthRole />} />
                                 <Route path="/log" element={<LogPage />} />
@@ -98,6 +97,7 @@ function App() {
                                 <Route path="/status" element={<Status />} />
                                 <Route path="/clamav" element={<ClamavPage />} />
                                 <Route path="/inspection" element={<InspectionPage />} />
+                                <Route path="/notice" element={<NoticePage />} />
                                 <Route path="*" element={<Error404Page />} />
                             </Routes>
                         </Suspense>
