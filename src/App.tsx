@@ -5,6 +5,7 @@ import defaultProps from "./Components/aside/AsideProps.tsx";
 import logo from "./assets/logo.png";
 import { config } from "./config.tsx";
 import BackendOfflinePage from "./Views/NotRunning.tsx";
+import LoadingPage from "./Views/Loading.tsx";
 
 const HomePage = lazy(() => import('./Views/HomePage'));
 const TerminalPage = lazy(() => import('./Views/TerminalPage'));
@@ -22,7 +23,6 @@ const DockerImage = lazy(() => import('./Views/docker/image.tsx'));
 const Status = lazy(() => import('./Views/StatusPage.tsx'));
 const ClamavPage = lazy(() => import('./Views/ClamavPage.tsx'));
 const InspectionPage = lazy(() => import('./Views/InspectionPage.tsx'));
-
 
 /**
  * 应用组件
@@ -80,7 +80,7 @@ function App() {
                     }}
                 >
                     <PageContainer>
-                        <Suspense fallback={<div>Loading...</div>}>
+                        <Suspense fallback={<LoadingPage />}>
                             <Routes>
                                 <Route path="/" element={<HomePage />} />
                                 <Route path="/files" element={<FilesPage />} />

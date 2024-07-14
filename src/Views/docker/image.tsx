@@ -83,17 +83,7 @@ export default function Page() {
 
                             }}>{image.Id.replace("sha256:", "").slice(0, 20) + "...  (点击复制)"}</a>
                         </Descriptions.Item>
-                        {/*<Descriptions.Item label={"RepoDigests"}>*/}
-                        {/*    {image.RepoDigests?.map((digest) => {*/}
-                        {/*        return <a onClick={() => {*/}
-                        {/*            navigator.clipboard.writeText(digest)*/}
-                        {/*            messageApi.success("复制成功", 1)*/}
-                        {/*        }}>{digest.slice(0, 20) + "...  (点击复制)"}</a>*/}
-                        {/*    })}*/}
-                        {/*</Descriptions.Item>*/}
-                        {/*<Descriptions.Item label={"Containers"}>{image.Containers}</Descriptions.Item>*/}
                         <Descriptions.Item label={"大小"}>{ChangeMemory(image.Size)}</Descriptions.Item>
-                        {/*<Descriptions.Item label={"SharedSize"}>{image.SharedSize}</Descriptions.Item>*/}
                         {
                             image.Labels && <Descriptions.Item label="Labels">
                                 <Collapse ghost>

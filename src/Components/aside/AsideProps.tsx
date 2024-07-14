@@ -82,12 +82,12 @@ export default {
                 icon: <BarChartOutlined />,
             }, {
                 path: "/clamav",
-                name: "Clamav",
+                name: "病毒扫描",
                 icon: <CodeSandboxOutlined />,
             },
             {
                 path: "/inspection",
-                name: "巡检",
+                name: "一键巡检",
                 icon: <CodeSandboxOutlined />,
             }
         ],
