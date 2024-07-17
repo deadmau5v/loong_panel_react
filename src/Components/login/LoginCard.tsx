@@ -1,8 +1,8 @@
-import {LoginForm, ProFormText} from '@ant-design/pro-components';
-import {message, Tabs} from "antd"
+import { LoginForm, ProFormText } from '@ant-design/pro-components';
+import { message, Tabs } from "antd"
 import logo from "../../assets/logo.png"
-import {useState} from "react";
-import {config} from "../../config.tsx";
+import { useState } from "react";
+import { config } from "../../config.tsx";
 
 export default function Plugin() {
     const [loginType, setLoginType] = useState('account');
@@ -60,24 +60,46 @@ export default function Plugin() {
             logo={logo}
             title={"LoongPanel"}
             onFinish={async (values) => {
-                fetch(config.API_URL + '/api/v1/auth/login', {
-                    method: 'POST',
-                    body: JSON.stringify(values),
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    credentials: 'include'
-                }).then(r => r.json()).then(
-                    (data: { status: number, msg: string }) => {
-                        if (data.status != 0) {
-                            MsgApi.error(data.msg);
-                        } else {
-                            MsgApi.success("登录");
-                            localStorage.setItem("isLogin", "true")
-                            window.location.href = "/"
+                if (loginType == 'register') {
+                    // 注册逻辑
+                    fetch(config.API_URL + '/api/v1/auth/register', {
+                        method: 'POST',
+                        body: JSON.stringify(values),
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        credentials: 'include'
+                    }).then(r => r.json()).then(
+                        (data: { status: number, msg: string }) => {
+                            if (data.status != 0) {
+                                MsgApi.error(data.msg);
+                            } else {
+                                MsgApi.success("注册成功");
+                                setLoginType('account');
+                            }
                         }
-                    }
-                );
+                    );
+                } else {
+                    // 登录逻辑
+                    fetch(config.API_URL + '/api/v1/auth/login', {
+                        method: 'POST',
+                        body: JSON.stringify(values),
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        credentials: 'include'
+                    }).then(r => r.json()).then(
+                        (data: { status: number, msg: string }) => {
+                            if (data.status != 0) {
+                                MsgApi.error(data.msg);
+                            } else {
+                                MsgApi.success("登录成功");
+                                localStorage.setItem("isLogin", "true")
+                                window.location.href = "/"
+                            }
+                        }
+                    );
+                }
             }}
         >
             <Tabs
@@ -93,6 +115,10 @@ export default function Plugin() {
                         key: 'mail',
                         label: '邮箱登录',
                     },
+                    {
+                        key: 'register',
+                        label: '注册',
+                    }
 
                 ]}
             />
@@ -131,6 +157,35 @@ export default function Plugin() {
                     />
                     {PasswordForm}
 
+                </>
+            )}
+            {loginType === 'register' && (
+                <>
+                    <ProFormText
+                        name="username"
+                        fieldProps={{
+                            size: 'large',
+                        }}
+                        placeholder={'账号'}
+                        required={true}
+                    />
+                    <ProFormText
+                        name="email"
+                        fieldProps={{
+                            size: 'large',
+                        }}
+                        placeholder={'邮箱'}
+                        required={false}
+                    />
+                    <ProFormText
+                        name="phone"
+                        required={false}
+                        fieldProps={{
+                            size: 'large',
+                        }}
+                        placeholder={'手机号'}
+                    />
+                    {PasswordForm}
                 </>
             )}
         </LoginForm>

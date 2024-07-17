@@ -161,6 +161,7 @@ function Page() {
             headers: {
                 'Content-Type': 'application/json',
             },
+            credentials: "include"
         });
         const data = await response.json();
         if (data.status != 0) {
