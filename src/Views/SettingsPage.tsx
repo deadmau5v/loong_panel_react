@@ -1,5 +1,5 @@
 import { ProCard } from "@ant-design/pro-components";
-import { Card, message, Form, Input, Switch, Button } from "antd"
+import { Card, message, Form, Input, Switch, Button, InputNumber } from "antd"
 import { useEffect, useState } from "react";
 import { config } from "../config";
 
@@ -205,7 +205,7 @@ export default function Page() {
                             name="mail_port"
                             label="邮件端口"
                         >
-                            <Input style={{ width: '300px' }} />
+                            <InputNumber style={{ width: '300px' }} />
                         </Form.Item>
                         <Form.Item
                             name="mail_user"
